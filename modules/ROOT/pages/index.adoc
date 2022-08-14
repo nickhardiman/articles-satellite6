@@ -8,6 +8,8 @@ Nick Hardiman
 These docs have nothing to do with any https://www.redhat.com/en/technologies/management/satellite[official Satellite docs].
 ====
 
+image::hpe-dimm-1.jpeg[hardware,width=600,title="HPE ProLiant MicroServer Gen10 Plus DIMM"]
+
 
 == issues with these articles
 
