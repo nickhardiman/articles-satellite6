@@ -1,0 +1,8 @@
+= check prerequisites
+Nick Hardiman <nick@silvan.uk>
+:source-highlighter: highlight.js
+:revdate: 12-10-2021
+
+A working RHEL 8 machine, with virtual network, virtual machine, DNS
+
+* xref:rhel:ROOT:index.adoc[]

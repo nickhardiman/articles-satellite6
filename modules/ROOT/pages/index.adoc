@@ -1,0 +1,16 @@
+= Satellite 6 on an HPE Microserver
+Nick Hardiman
+:source-highlighter: highlight.js
+:revdate: 14-08-2022
+
+[NOTE]
+====
+These docs have nothing to do with any https://www.redhat.com/en/technologies/management/satellite[official Satellite docs].
+====
+
+
+== issues with these articles
+
+Something wrong? 
+Open an https://github.com/nickhardiman/articles-satellite6/issues[issue on GitHub].
+

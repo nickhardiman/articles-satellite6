@@ -1,0 +1,9 @@
+= set up
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 12-10-2021
+
+I'm in the process of experimenting with Openshift Container Platform 4 in my home lab. 
+I'm writing about my experiments here. 
+
+

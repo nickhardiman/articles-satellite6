@@ -1,0 +1,7 @@
+= Satellite 6
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 14-08-2022
+
+Red Hat Satellite on an HPE ProLiant MicroServer
+
