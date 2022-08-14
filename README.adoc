@@ -1,7 +1,19 @@
-= Satellite 6
+= Satellite 6 in my home lab
 Nick Hardiman 
 :source-highlighter: highlight.js
 :revdate: 14-08-2022
 
-Red Hat Satellite on an HPE ProLiant MicroServer
+Yet another braindump. Better out than in. 
 
+== stack 
+
+* guest application: Red Hat Satellite 6
+* guest OS: https://hardiman.consulting/rhel/8/index.html[RHEL 8]
+* host OS: https://hardiman.consulting/rhel/9/index.html[RHEL 9]
+* host hardware: https://buy.hpe.com/uk/en/servers/proliant-microserver/proliant-microserver/proliant-microserver/hpe-proliant-microserver-gen10-plus/p/1012241014[HPE ProLiant MicroServer gen10 Plus].
+
+== stuff 
+
+* https://github.com/nickhardiman/articles-satellite6[docs]
+* https://github.com/nickhardiman/vm-satellite1[ansible for the guest]
+* https://github.com/nickhardiman/machine-host3[ansible for the host]
