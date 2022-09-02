@@ -1,0 +1,23 @@
+= register a host
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 11-01-2021
+
+
+I created and registered guest4 and guest5.
+
+==  CA and certificates
+
+I stuck to the factory-fitted internal CA. 
+
+[source,shell]
+....
+sudo yum localinstall http://satellite1.lab.example.com/pub/katello-ca-consumer-latest.noarch.rpm
+....
+
+== subscription manager 
+
+[source,shell]
+....
+sudo subscription-manager register --org="myorg" --environment Library
+....

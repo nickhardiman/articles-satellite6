@@ -1,0 +1,253 @@
+= libvirt network for provisioning hosts
+Nick Hardiman <nhardima@redhat.com>
+:source-highlighter: highlight.js
+:revdate: 11-01-2021
+
+
+
+For provisioning hosts using satellite capsule.
+Works, one host provisioned. 
+Didn't work with private0 and dnsmasq
+
+i want
+
+* capsule1 to provide dns and dhcp to this network
+* no dnsmasq
+* no connection to outside world
+
+== create test0 network
+
+fake NIC on host
+
+[source,shell]
+....
+dummy name            dummy0
+dummy IP              192.168.132.1
+nmcli connection      dummy-dummy0
+....
+
+not sure if dummy interface is required
+maybe for connections from VM to host2 eg. ssh
+
+bridge on host
+
+[source,shell]
+....
+bridge name           test0
+bridge mac            52:54:00:03:00:02
+bridge IP             192.168.132.2
+nmcli connection      bridge-test0
+....
+
+libvirt on host
+
+[source,shell]
+....
+libvirt network name  net-test0
+....
+
+virtual interface 'dummy0' on host
+
+[source,shell]
+....
+# virtual interface 'dummy0' on host
+# https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_and_managing_networking/creating-a-dummy-interface_configuring-and-managing-networking
+# create interface dummy0 and connection dummy-dummy0
+nmcli connection add type dummy ifname dummy0 ipv4.method manual ipv4.addresses 192.168.132.1/24
+# ??? ip link add dummy0 address 52:54:00:03:00:01 type dummy
+ping -c1 192.168.132.1
+nmcli connection show
+# remove
+# nmcli con delete dummy-dummy0
+....
+
+bridge 'test0' on host
+
+[source,shell]
+....
+# bridge 'test0' on host
+# create bridge test0 and connection bridge-test0
+nmcli con add ifname test0 type bridge
+# shows
+# test0            DOWN           3a:23:c1:86:30:c7 <NO-CARRIER,BROADCAST,MULTICAST,UP>
+# why DOWN? Because no VMs are using it.
+ip -brief link show type bridge
+#
+# 'nmcli device status' shows
+#  DEVICE          TYPE      STATE                                  CONNECTION
+#  test0           bridge    connecting (getting IP configuration)  bridge-test0
+nmcli device status
+nmcli con mod bridge-test0 ipv4.addresses 192.168.132.2/24
+nmcli con mod bridge-test0 ipv4.method manual
+nmcli con mod bridge-test0 bridge.mac-address 52:54:00:00:00:02
+nmcli con up bridge-test0
+# now shows
+#  DEVICE          TYPE      STATE                                  CONNECTION
+#  test0           bridge    connected                              bridge-test0
+nmcli device status
+ip address show test0
+....
+
+attach interface to bridge on host
+
+[source,shell]
+....
+# attach interface to bridge on host
+nmcli con add type bridge-slave ifname dummy-dummy0 master bridge-test0
+# required ??? nmcli con down dummy-dummy0
+nmcli con up bridge-test0
+....
+
+create libvirt network 'net-test0' on host
+
+[source,shell]
+....
+# create libvirt network 'net-test0' on host
+xmllint --noout  net-test0.xml
+virsh net-define net-test0.xml
+virsh net-start net-test0
+virsh net-autostart net-test0
+virsh net-list --all
+# remove with
+# virsh net-destroy net-test0
+# virsh net-undefine net-test0
+....
+
+test. Build two VMs with IFs on public0 and test0.
+SSH via public0, experiment with test0.
+Can they talk to each other?
+ ping the gateway?
+ SSH to host's dummy IF? 
+
+[source,shell]
+....
+# test network
+cd /root/libvirt
+./vm-test0-build.sh
+./vm-test1-build.sh
+# second interface on test0
+nmcli con mod enp2s0  ipv4.addresses 192.168.132.3/24
+nmcli con mod enp2s0  ipv4.method    manual
+nmcli con up enp2s0
+ip r
+ping -c2 192.168.132.1
+#
+# second interface on test1
+nmcli con mod enp2s0  ipv4.addresses 192.168.132.4/24
+nmcli con mod enp2s0  ipv4.method    manual
+nmcli con up enp2s0
+....
+
+== helper scripts
+
+net-test0.xml
+
+[source,shell]
+....
+<!-- needs bridge, does not create bridge -->
+<!-- does not create dnsmasq instance, check with  -->
+<!-- ps -fwwC dnsmasq-->
+<network>
+  <name>test0</name>
+  <forward mode='bridge'/>
+  <bridge name='test0br'/>
+</network>
+....
+
+net-test0-build.sh
+
+[source,shell]
+....
+nmcli con add ifname test0br type bridge
+ip -brief link show type bridge
+#
+xmllint --noout  net-test0.xml
+virsh net-define net-test0.xml
+virsh net-start test0
+virsh net-list --all
+....
+
+Kill them all. 
+
+net-destroy.sh
+
+[source,shell]
+....
+NET=$1
+virsh net-destroy $NET
+virsh net-undefine $NET
+virsh net-list --all
+....
+
+vm-destroy.sh
+
+[source,shell]
+....
+HOST=$1
+virsh destroy $HOST
+virsh undefine --nvram $HOST
+virsh vol-delete $HOST.qcow2 --pool images
+....
+
+
+== docs
+
+see
+
+* /Users/nhardima/Documents/red-hat/product/virtualization/
+* https://wiki.libvirt.org/page/Networking
+* https://wiki.libvirt.org/page/VirtualNetworking
+* https://www.cyberciti.biz/faq/how-to-add-network-bridge-with-nmcli-networkmanager-on-linux/
+* https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html-single/configuring_and_managing_virtualization/index#virtual-networking-bridged-mode_types-of-virtual-machine-network-connections
+
+
+== forward mode
+
+https://libvirt-users.redhat.narkive.com/qikKeDfI/how-to-disable-dnsmasq-from-starting-automatically-with-libvirtd
+
+these create bridge device
+
+[source,XML]
+....
+<forward mode='nat'>
+<forward mode='route'>
+....
+
+no forward mode
+
+Any network defined with <forward mode='nat'>, <forward mode='route'>,
+or no forward element at all, will
+result in libvirtd creating a new bridge device for that network.
+
+these start dnsmasq for dns
+
+[source,XML]
+....
+<ip ...>...</ip>
+....
+
+If the network also has an IP address defined, then a dnsmasq instance will be
+started, listening *only* on that IP address (i.e. only on the bridge)
+for DNS requests.
+
+these start dnsmasq for dhcp
+[source,XML]
+....
+<dhcp ...>...</dhcp>
+....
+
+If the <ip> element also has a <dhcp> section, then
+the dnsmasq instance will also listen on the dhcp port *only* on the bridge.
+
+these do not run dnsmasq
+
+[source,XML]
+....
+<forward mode='bridge'>
+<forward mode='hostdev'>
+....
+
+For <forward mode='bridge'> and <forward mode='hostdev'>, no bridge
+device is created by libvirt, no IP address is configured on the host,
+and no dnsmasq is started.
+

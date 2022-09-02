@@ -1,2 +1,7 @@
 * xref:index.adoc[]
 ** xref:prerequisites.adoc[]
+** xref:hardware.adoc[]
+** xref:libvirt-network-test0.adoc[]
+** xref:vm-satellite.adoc[]
+** xref:vm-capsule.adoc[]
+** xref:register-host.adoc[]

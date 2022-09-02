@@ -1,0 +1,65 @@
+= build capsule
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 11-01-2021
+
+
+== VM 
+
+Built capsule virtual machine on host2 
+
+* https://github.com/nickhardiman/machine-host2
+* https://github.com/nickhardiman/vm-capsule1
+
+== supporting software 
+
+https://github.com/nickhardiman/vm-capsule1/blob/main/build-service.yml
+
+== install capsule 
+
+Chapter 6. Deploy Satellite Capsule Servers
+https://role.rhu.redhat.com/rol-rhu/app/courses/rh403ea-6.11/pages/ch06
+
+
+[source,shell]
+....
+satellite-installer             \
+    --scenario                                    capsule       \
+    --certs-tar-file                              "/root/capsule_certs.tar"         \
+    --foreman-proxy-register-in-foreman           "true"          \
+    --foreman-proxy-foreman-base-url              "https://satellite1.lab.example.com"    \
+    --foreman-proxy-trusted-hosts                 "satellite1.lab.example.com"            \
+    --foreman-proxy-trusted-hosts                 "capsule1.lab.example.com"              \
+    --foreman-proxy-oauth-consumer-key            "1234DeyWMzwX4hkj1234CYrL63BxXCc"      \
+    --foreman-proxy-oauth-consumer-secret         "1234vGSLqbRhXrwU1234ESa4fZhfjDj"
+....
+
+I later added DNS, DHCP and tftp 
+
+[source,shell]
+....
+NAME1_IP=192.168.1.12
+CAPSULE_IP_PUBLIC=192.168.1.19
+CAPSULE_IP_PRIVATE=192.168.132.5
+CAPSULE_NIC_PRIVATE=enp2s0
+#
+satellite-installer   \
+  --scenario                       capsule       \
+  --foreman-proxy-dhcp             true   \
+  --foreman-proxy-dhcp-managed     true   \
+  --foreman-proxy-dhcp-gateway     "$CAPSULE_IP_PRIVATE"   \
+  --foreman-proxy-dhcp-interface   "$CAPSULE_NIC_PRIVATE"  \
+  --foreman-proxy-dhcp-nameservers "$CAPSULE_IP_PRIVATE"   \
+  --foreman-proxy-dhcp-range       "192.168.132.100 192.168.132.199"   \
+  --foreman-proxy-dhcp-server      "$CAPSULE_IP_PRIVATE"   \
+  --foreman-proxy-dns              true   \
+  --foreman-proxy-dns-managed      true   \
+  --foreman-proxy-dns-forwarders   "$NAME1_IP"   \
+  --foreman-proxy-dns-interface    "$CAPSULE_NIC_PRIVATE"   \
+  --foreman-proxy-dns-reverse      "132.168.192.in-addr.arpa"  \
+  --foreman-proxy-dns-server       "$CAPSULE_IP_PRIVATE"   \
+  --foreman-proxy-dns-zone         "private.example.com"   \
+  --foreman-proxy-tftp             true   \
+  --foreman-proxy-tftp-servername  $CAPSULE_IP_PRIVATE   \
+  --foreman-proxy-tftp-managed     true
+....

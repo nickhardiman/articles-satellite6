@@ -1,0 +1,79 @@
+= build satellite
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 11-01-2021
+
+I installed Satellite 6.11 on RHEL 8. 
+It's still pretty manual. 
+
+what are these? any good? 
+
+* https://github.com/oasis-roles/satellite
+* https://github.com/RedHatGov/product-demos/tree/satellite
+
+== VM 
+
+Built satellite virtual machine on host3 
+
+* https://github.com/nickhardiman/machine-host3
+* https://github.com/nickhardiman/vm-satellite1
+
+== supporting software 
+
+https://github.com/nickhardiman/vm-satellite1/blob/main/build-satellite.yml
+
+== install satellite 
+
+
+[source,shell]
+....
+# set up Satellite
+satellite-installer \
+  --scenario satellite \
+  --foreman-initial-admin-username someguy \
+  --foreman-initial-admin-password somepass
+#
+# checks
+satellite-maintain service list
+satellite-maintain health check
+hammer ping
+....
+
+
+
+== obtain subscription manifest
+
+https://access.redhat.com/solutions/1249873
+What are the different ways to refresh Red Hat Satellite Manifest and how to automate the manifest refresh?
+
+Red Hat Subscription Management
+https://access.redhat.com/management
+
+Red Hat Customer Portal > Subscriptions > Subscription Allocations
+
+Content > Subscriptions > Manage Manifests > Refresh Manifest
+
+Subscription Allocations > Create new subscription allocation
+
+install subscription manifest
+
+[source,shell]
+....
+hammer subscription upload \
+  --file satellite/manifest_sub-all_20220323T165406Z.zip \
+  --organization myorg
+....
+
+
+== extra packages
+
+foreman-maintain packages install some-package-i-missed
+
+Packages bind-utils, vim and tcpdump are useful for troubleshooting. 
+Add them to RPMs: here. 
+https://github.com/nickhardiman/vm-satellite1/blob/main/group_vars/all/main.yml
+
+And copy to here. 
+https://github.com/nickhardiman/vm-capsule1/blob/main/group_vars/all/main.yml
+
+

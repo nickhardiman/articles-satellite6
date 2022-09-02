@@ -1,0 +1,379 @@
+= machine HPE Proliant microserver gen10 plus
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 01-03-2022
+
+
+== good for
+
+good for
+
+* BMC and redfish
+* NAS
+* Openstack
+
+
+== links
+
+two versions
+
+* Intel Pentium Gold processor
+* Intel Xeon E processor
+
+I bought the pentium version
+https://www.ebuyer.com/1134211-hpe-proliant-microserver-gen10-plus-ultra-micro-tower-server-1-x-perfms-006?_sgm_campaign=fcs_9d9d0979c6000&_sgm_source=1134211%7Cproduct&_sgm_action=search&_sgm_term=microserver
+
+I needed advanced features, provided by the advanced license 
+https://techexpert.tips/hp-ilo/hp-ilo-advanced-license-installation/
+
+reference 
+
+* https://www.hpe.com/support/ilo-docs
+* https://www.hpe.com/info/docs
+* HPE iLO: https://www.hpe.com/info/ilo
+* Buy HPE iLO Advanced: https://www.hpe.com/info/ilo
+* iLO Firmware download: https://www.hpe.com/support/ilo5
+* HPE iLO Licensing Guide: https://www.hpe.com/support/iLOLicenseGuide-en
+* Select the right iLO license: https://www.hpe.com/support/iLOLicenseOverview
+* HPE iLO Mobile App - Android
+* HPE iLO Mobile App - iOS
+
+
+== machine
+
+HPE ProLiant MicroServer Gen10 Plus Server
+
+torx tr15 undoes the screws
+
+user name and password on sticker on bottom
+
+
+== storage
+
+Came with no disks. i bought this
+
+ebuyer
+
+[source,shell]
+....
+https://www.ebuyer.com/705074-hpe-4tb-6g-sata-7-2k-rpm-lff-3-5-non-hot-plug-hard-drive-801888-b21
+Item	         HPE 4TB 6G SATA 7.2K rpm LFF 3.5'' Non-hot Plug Hard Drive
+QF (QuickFind) 705074
+QTY	           1
+Price	         £185.49
+Mfr part code: 801888-B21
+....
+
+same thing? 
+
+[source,shell]
+....
+HPE
+https://buy.hpe.com/uk/en/options/drives-storage/server-hard-drives/hpe-business-critical-hard-drives/hpe-4tb-sata-6g-business-critical-7-2k-lff-rw-1-year-warranty-multi-vendor-hdd/p/801888-B21
+HPE 4TB SATA 6G Business Critical 7.2K LFF RW 1-year Warranty Multi Vendor HDD
+description  HPE 4 TB, SATA 7.2K rpm, non-hot-plug, large form factor hard drive with 1-year warranty
+SKU #        801888-B21
+price        £179.00 Exclude VAT
+....
+
+Amazon
+sold by third parties, not Amazon
+
+* https://www.amazon.co.uk/3-5-Inch-Internal-801888-B21-Certified-Refurbished/dp/B07GRG23WL/ref=sr_1_2?crid=2U1V9B1NJ7HZD&keywords=801888-B21&qid=1652702310&sprefix=801888-b21%2Caps%2C93&sr=8-2
+refurbished £161.08, Brand is Salicru, not HP
+* https://www.amazon.co.uk/HP-801888-B21-SATA-3-5in-NMDL/dp/B00TOCLVBC/ref=sr_1_1?crid=2U1V9B1NJ7HZD&keywords=801888-B21&qid=1652702381&sprefix=801888-b21%2Caps%2C93&sr=8-1, £226.62
+
+
+== memory
+
+Delivered with 8GB, later upgraded to 24GB. I added to a 16GB DIMM
+https://www.ebuyer.com/872715-hpe-16gb-1x16gb-dual-rank-x8-ddr4-2666-cas-19-19-19-unbuffered-standard-memory-kit-879507-b21?_sgm_campaign=scn_a367e65fe8000&_sgm_source=872715&_sgm_action=click
+
+Intel Pentium Gold processors support DIMM speed of up to 2400 MT/s.
+
+
+
+=== DIMM that was supplied
+
+
+HPE ProLiant Gen10 Servers - Part Number Memory Matrix
+https://support.hpe.com/hpesc/public/docDisplay?docId=a00036896en_us&docLocale=en_US
+
+[source,shell]
+....
+HPE ProLiant DL20 Gen10 Server
+HPE ProLiant ML30 Gen10 Server
+Unbuffered DIMMs (UDIMMs)
+Option Kit Description   HPE 8GB (1 x 8GB) Single Rank x8 DDR4-2666 MHz CAS-19-19-19 Unbuffered Standard Memory Kit
+Option Part Number       879505-B21
+Spare Part Number        P06772-001
+Assembly Part Number     879526-091
+....
+
+sticker on DIMM
+
+[source,shell]
+....
+8GB 1Rx8 PC4 - 3200AA - ED2 - 11
+....
+
+According to user guide, page 11, HPE_a00073430en_us_HPE ProLiant MicroServer Gen10 Plus User Guide.pdf
+DIMM label identification
+that means
+
+[source,shell]
+....
+1, capacity                          8GB
+2, rank, single rank                 1R
+3, data width on DRAM, 8bit          x8
+4, memory generation, DDR4           PC4
+5, maximum memory speed, MT/s        3200   (memory chip megatransfers per second, not DIMM GB/s)
+6, CAS latency, ?                    AA
+7, DIMM type, Unbuffered ECC (UDIMM) E
+?, extra fields, D2 - 11
+....
+
+this one?
+https://partsurfer.hpe.com/Search.aspx?SearchText=P06772-001
+
+[source,shell]
+....
+Part Number	Part Description	Most Used	RoHS	CSR	Tech Courier
+P06772-001	HPE 8GB (1x8GB) Single Rank x8 DDR4-2666 CAS-19-19-19 Unbuffered Standard Memory Kit
+....
+
+HPE store
+not listed on buy.hpe.com, is this similar?
+Don't think so, UDIMM is not registered, registered is RDIMM (https://en.wikipedia.org/wiki/Registered_memory)
+https://buy.hpe.com/uk/en/options/enterprise-memory/server-memory/server-memory/hpe-ddr4-smartmemory/hpe-8gb-1x8gb-single-rank-x8-ddr4-3200-cas-22-22-22-registered-smart-memory-kit/p/P07638-B21
+
+[source,shell]
+....
+HPE 8GB (1x8GB) Single Rank x8 DDR4-3200 CAS-22-22-22 Registered Smart Memory Kit
+SKU #P07638-B21
+£137.00 Exclude VAT
+....
+
+
+=== similar 8GB DIMMs
+
+official spare part: 
+HPE ProLiant Gen10 Servers - Part Number Memory Matrix
+https://support.hpe.com/hpesc/public/docDisplay?docId=a00036896en_us&docLocale=en_US#N125FE
+strangely different
+
+[source,shell]
+....
+HPE ProLiant MicroServer Gen10
+
+8GB
+Option Kit Description   HPE 8GB (1 x 8GB) Single Rank x8 DDR4-2400 CAS-17-17-17 Unbuffered Standard Memory Kit
+Option Part Number       862974-B21
+Spare Part Number        869537-001
+Assembly Part Number     862689-091
+....
+
+Hewlett Packard Enterprise PartSurfer
+https://partsurfer.hpe.com/Search.aspx?SearchText=869537-001
+
+8GB PC4-2400T-E unbuffered with ECC synchronous dynamic random access memory (SDRAM) dual data rate (DDR4) packaged in dual in-line memory module (DIMM),1Gx72
+
+ebuyer
+[source,shell]
+....
+HPE RAM Module 8GB 1RX8 PC4-2666V-E STND KIT
+QuickFind:     881586
+Mfr part code: 879505-B21
+DDR4-2666/PC4-21333 DDR4 SDRAM
+CL19 - 1.20 V
+Unbuffered
+288-pin
+DIMM
+https://www.ebuyer.com/881586-hpe-ram-module-8gb-1rx8-pc4-2666v-e-stnd-kit-879505-b21
+£ 105.59  inc. vat
+....
+
+amazon
+
+searching amazon for part number P06772-001 takes me here
+https://www.amazon.co.uk/ESUS-ProLiant-Unbuffered-879505-B21-P06772-001/dp/B08JV1LLKP/ref=sr_1_1?keywords=P06772-001&qid=1652701746&s=computers&sr=1-1
+, £86.93
+
+=== similar 16GB DIMMs
+
+HPE shop (not a shop, can't buy from it)
+
+[source,shell]
+....
+HPE 16GB (1 x 16GB) Dual Rank x8 DDR4-2400 CAS-17-17-17 Unbuffered Standard Memory Kit
+Option Part Number       862976-B21
+Spare Part Number        869538-001
+Assembly Part Number     862690-091
+https://buy.hpe.com/uk/en/options/enterprise-memory/server-memory/server-memory/hpe-ddr4-standard-memory/hpe-16gb-1x16gb-dual-rank-x8-ddr4-2666-cas-19-19-19-unbuffered-standard-memory-kit/p/879507-B21
+HPE 16GB (1x16GB) Dual Rank x8 DDR4-2666 CAS-19-19-19 Unbuffered Standard Memory Kit
+SKU # 879507-B21
+£137.00 Exclude VAT
+....
+
+
+https://www.ebuyer.com/872715-hpe-16gb-1x16gb-dual-rank-x8-ddr4-2666-cas-19-19-19-unbuffered-standard-memory-kit-879507-b21?_sgm_campaign=scn_a367e65fe8000&_sgm_source=872715&_sgm_action=click
+HPE 16GB (1x16GB) Dual Rank x8 DDR4-2666 CAS-19-19-19 Unbuffered Standard Memory Kit
+£ 155.99  inc. vat
+
+amazon
+https://www.amazon.co.uk/Kingston-Premier-KSM32ED8-32ME-3200MHz/dp/B08GKW98G9/ref=sr_1_3?crid=3SA8YIBTT3ASJ&keywords=dimm%2B32GB&qid=1652702800&s=electronics&sprefix=dimm%2B32gb%2Celectronics%2C54&sr=1-3&th=1
+Kingston Server Premier 16GB 2666MHz DDR4 ECC CL19 DIMM 1Rx8 Server Memory
+£100.99
+
+https://uk.crucial.com/compatible-upgrade-for/hp---compaq/proliant-microserver-gen10-plus
+Micron 16GB DDR4-3200 VLP ECC UDIMM 2Rx8 CL22
+none for sale on crucial site
+similar on on Scan (below)
+
+https://www.scan.co.uk/shop/computer-hardware/memory-ram/2400-ddr4-server-memory
+https://www.scan.co.uk/products/16gb-micron-ddr4-udimm-server-dram-pc4-25600-3200-ecc-cas-22-22-22-12v
+£89.99
+mostly RDIMMs (registered) from SK Hynix and samsung, which I dont want.
+
+https://www.mrmemory.co.uk/memory-ram-upgrades/hp/proliant/microserver-gen10-plus
+https://www.mrmemory.co.uk/all-products/16gb-ddr4-pc4-21300-2666mhz-288-pin-udimm-ecc-unbuffered
+DDR4 PC4-21300 2666MHz 288-pin UDIMM ECC Unbuffered
+£95.99 each
+
+=== more
+
+description
+HPE DDR4 SmartMemory
+https://www.hpe.com/psnow/doc/c04355083?jumpid=in_lit-psnow-red
+
+HPE shop
+https://buy.hpe.com/uk/en/options/enterprise-memory/server-memory/server-memory/hpe-ddr4-smartmemory/p/7281077
+
+=== upgrade
+
+two of these old DIMMS?
+HP 16GB (1x16GB) PC4-2133P 2Rx4 Server Memory 752369-081
+https://www.techbuyer.com/uk/752369-081-HP
+£42.73 inc VAT
+
+
+
+
+== license
+
+supplied with iLO Essentials, I got the advanced 60 day trial for virtual media features.
+
+Administration > Licensing
+says
+[source,shell]
+....
+Current License Status
+License           Status   Activation Key
+iLO Essentials    OK       -
+....
+
+Administration > User Administration
+Administrator has all these.
+
+[source,shell]
+....
+  Login
+  Remote Console
+  Virtual Power and Reset
+  Virtual Media
+  Host BIOS
+  Configure iLO Settings
+  Administer User Accounts
+  Host NIC
+  Host Storage
+  Recovery Set
+  IPMI/DCMI Privilege based on above settings:
+....
+
+HPE_a00026409en_us_HPE iLO 5 User Guide.pdf
+says
+
+Using an image file Prerequisites
+
+* Remote Console privilege
+* The Remote Console feature is enabled on the Access Settings page.
+* An iLO license that supports this feature is installed. For more information, see the following website:
+http://www.hpe.com/info/ilo/licensing.
+
+what is "An iLO license that supports this feature"?
+
+maybe this
+https://buy.hpe.com/uk/en/software/server-management-software/server-ilo-management/ilo-licenses/hpe-ilo-advanced/p/332279
+Shop > Software > Server Management Software > Server iLO Management > HPE iLO Advanced
+[source,shell]
+....
+https://buy.hpe.com/uk/en/software/server-management-software/server-ilo-management/ilo-licenses/hpe-ilo-advanced/hpe-ilo-advanced-1-server-license-with-1yr-support-on-ilo-licensed-features/p/512485-B21
+HPE iLO Advanced 1-server License with 1yr Support on iLO Licensed Features
+One-year HPE iLO Advanced support license for one server
+SKU # 512485-B21
+£174.00 Exclude VAT
+key features
+...
+Virtual Media and folders to simplify server set up.
+HPE iLO Advanced Trial Licence
+https://www.hpe.com/emea_europe/en/resources/integrated-systems/ilo-advanced-trial.html
+....
+
+
+== virtual media
+
+With essentials license 
+
+problem
+
+web UI > Remote Console & Media > Virtual Media
+says
+One or more features on this page require a license. Refer to the Licensing page for more information.Licensing pageVirtual Media enables iLO to view and eject local media or boot from URL-based media.
+
+
+
+== OS and apps
+
+
+
+== bought
+
+[source,shell]
+....
+ 	Subtotal £557.79
+ 	Shipping £8.14
+ 	VAT      £113.19
+ 	Total    £679.12
+....
+
+Ebuyer.com
+Order date   25/02/2022
+
+https://www.ebuyer.com/964566-hpe-enablement-kit-for-proliant-microserver-gen10-p13788-b21
+[source,shell]
+....
+Item	       HPE - Enablement kit - For ProLiant MicroServer Gen10
+QF	         964566
+QTY	         1
+Price	       £38.88
+....
+
+wrong one, this is xeon
+pentium no longer listed
+https://www.ebuyer.com/1134211-hpe-proliant-microserver-gen10-plus-ultra-micro-tower-server-1-x-perfms-006
+[source,shell]
+....
+Item	       HPE ProLiant MicroServer Gen10 Plus Entry - Ultra Micro Tower - Pentium Gold G5420 3.8 GHz - 8GB
+QF	         964563
+QTY	         1
+Price	       £444.99
+....
+
+https://www.ebuyer.com/705074-hpe-4tb-6g-sata-7-2k-rpm-lff-3-5-non-hot-plug-hard-drive-801888-b21
+[source,shell]
+....
+Item	       HPE 4TB 6G SATA 7.2K rpm LFF 3.5'' Non-hot Plug Hard Drive
+QF	         705074
+QTY	         1
+Price	       £185.49
+....

@@ -8,6 +8,33 @@ Nick Hardiman
 These docs have nothing to do with any https://www.redhat.com/en/technologies/management/satellite[official Satellite docs].
 ====
 
+satellite 6.11 and capsule
+
+[source,shell]
+....
++--------------------------------------------+
+|                                            |
+| default gateway                            |
++-+------------------------------------------+
+  |                                         |
+  | default network                         |
+  | 192.168.122.0/24                        |
+  |                                         |
++-+-------------------------------------+ +-+-------------------------------------+
+|enp1s0  capsule1.lab.example.com       | |enp1s0  satellite1.lab.example.com     |
+|                                       | |                                       |
+|enp2s0  capsule1.private.example.com   | |                                       |
++-+-------------------------------------+ +---------------------------------------+
+  |
+  | test0 network
+  | 192.168.132.0/24
+  |
++-+-------------------------------------+
+|                                       |
+| provisioned box                       |
++---------------------------------------+
+....
+
 
 
 == issues with these articles
