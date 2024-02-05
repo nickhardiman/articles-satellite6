@@ -1,0 +1,12 @@
+= REx (Remote Execution)
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 02-02-2-2024
+
+
+== links
+
+
+https://www.redhat.com/en/blog/getting-started-red-hat-satellite-remote-execution
+
+https://www.redhat.com/en/blog/red-hat-satellite-612-and-remote-execution-now-featuring-pull-mode

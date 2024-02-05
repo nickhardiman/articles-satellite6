@@ -1,0 +1,9 @@
+= manage with Ansible
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 02-02-2-2024
+
+
+== links
+
+https://blog.scheib.me/2023/07/09/automating-satellite.html

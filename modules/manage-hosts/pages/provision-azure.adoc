@@ -1,0 +1,9 @@
+= provision an Azure host
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 02-02-2-2024
+
+
+== links
+
+https://portal.azure.com/#view/Microsoft_Azure_CostManagement/Menu/~/invoices/openedBy/AzurePortal

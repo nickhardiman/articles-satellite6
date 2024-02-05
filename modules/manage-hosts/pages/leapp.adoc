@@ -1,0 +1,11 @@
+= Leapp
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 02-02-2-2024
+
+
+== links
+
+https://www.redhat.com/en/blog/leapp-upgrade-using-red-hat-satellite-6
+
+https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html-single/upgrading_from_rhel_7_to_rhel_8/index

@@ -5,3 +5,6 @@
 ** xref:vm-satellite.adoc[]
 ** xref:vm-capsule.adoc[]
 ** xref:register-host.adoc[]
+** xref:ansible.adoc[]
+** xref:simple-content-access.adoc[]
+
