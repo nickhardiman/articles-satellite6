@@ -1,0 +1,29 @@
+= login with OAuth 
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 06-02-2024
+
+SSO (Single Sign On)
+
+== links
+
+https://access.redhat.com/documentation/en-us/red_hat_satellite/6.13/html/installing_satellite_server_in_a_connected_network_environment/configuring_external_authentication_satellite#Configuring_Project_with_Keycloak_Authentication_keycloak-general
+
+https://access.redhat.com/documentation/en-us/red_hat_satellite/6.14/html/installing_satellite_server_in_a_connected_network_environment/configuring_external_authentication_satellite
+
+https://www.keycloak.org/
+
+https://access.redhat.com/documentation/en-us/red_hat_build_of_keycloak/22.0/html-single/getting_started_guide/index
+
+
+https://access.redhat.com/documentation/en-us/red_hat_satellite/6.13/html/installing_satellite_server_in_a_connected_network_environment/configuring_external_authentication_satellite#Configuring_FreeIPA_Authentication_on_Server_satellite
+
+
+5.9. Configuring Satellite with Red Hat Single Sign-On Authentication
+https://access.redhat.com/documentation/en-us/red_hat_satellite/6.13/html-single/installing_satellite_server_in_a_connected_network_environment/index#Configuring_Project_with_Keycloak_Authentication_keycloak-general
+
+
+== home lab 
+
+LDAP
+https://satellite.build.example.com/auth_source_ldaps/new

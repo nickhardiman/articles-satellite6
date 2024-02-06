@@ -1,0 +1,6 @@
+= operate
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 06-02-2024
+
+I'm in the process of experimenting.

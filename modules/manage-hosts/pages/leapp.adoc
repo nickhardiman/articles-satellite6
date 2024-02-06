@@ -1,7 +1,7 @@
 = Leapp
 Nick Hardiman 
 :source-highlighter: highlight.js
-:revdate: 02-02-2-2024
+:revdate: 02-02-2024
 
 
 == links

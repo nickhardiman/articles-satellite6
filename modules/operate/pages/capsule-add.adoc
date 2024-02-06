@@ -1,0 +1,14 @@
+= add a capsule
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 06-02-2024
+
+Install a new Capsule and link with Satellite. 
+
+[source,shell]
+----
+----
+
+== links 
+
+https://access.redhat.com/documentation/en-us/red_hat_satellite/6.14/html/installing_capsule_server/installing-capsule-server

@@ -1,0 +1,118 @@
+= login with LDAP (Lightweight Directory Access Protocol)
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 06-02-2024
+
+== links
+
+
+== IDM LDAP
+
+Adminster > Authentication Sources > LDAP > Create 
+https://satellite.build.example.com/auth_source_ldaps/new
+
+LDAP server 
+
+[source,shell]
+----
+Name                 idm
+Server               id.build.example.com
+LDAPS                -
+Port                 389
+Server type          FreeIPA
+----
+
+Account 
+
+[source,shell]
+----
+Account Username     uid=bind_user,cn=sysaccounts,cn=etc,dc=build,dc=example,dc=com
+Account Password     Password;1
+Base DN              dc=build,dc=example,dc=com
+Groups base DN       cn=groups,cn=accounts,dc=build,dc=example,dc=com
+LDAP filter   -
+Automatically Create Accounts In Satellite -
+Usergroup Sync  -
+----
+
+Attribute mappings 
+
+[source,shell]
+----
+Login Name Attribute     uid
+First Name Attribute     givenName
+Surname Attribute        sn
+Email Address Attribute  mail
+Photo attribute          -
+----
+
+Locations
+
+[source,shell]
+----
+Locations                Default Location
+----
+
+Organisations
+
+[source,shell]
+----
+Organisations            Default Organization
+----
+
+
+=== user privileges after first login 
+
+Adminster > Users > nick 
+Administrator
+
+User 
+
+
+[source,shell]
+----
+Username  *            nick
+First Name             Nick
+Surname                Hardiman
+Email Address          nick@build.example.com
+Disabled               -
+Description            -
+Language               Browser locale
+Timezone               Browser timezone
+Authorised by *        LDAP-idm
+----
+
+
+
+== Azure Entra LDAP
+
+Microsoft Azure 
+Active Directory 
+Identity and Access Management
+
+=== Azure identity 
+
+Azure subscription 1 > Access control (IAM) 
+
+app registrations 
+https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade
+homelabsat
+
+https://portal.azure.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/Overview
+
+[source,shell]
+----
+Description  satclientsecret
+Expires      05/06/2024
+Value        47v8Q~JohS2k.MR816ZRwLRLj5a6cB4y6ECRLaLk
+Secret ID    ae5d4b2b-0879-496b-9633-3a28f04ce1bd
+
+Application (client) ID  3a30e940-7336-4103-a9c7-fd1d9d769926
+Directory (tenant) ID    577fae53-a4a4-4587-926c-a38d8d125f3f
+Subscription ID          0109f310-25b4-408d-8557-110eb7af495e
+
+resource group
+labresourcegroup
+
+virtual networks
+----

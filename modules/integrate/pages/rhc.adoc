@@ -1,0 +1,56 @@
+= RHC (Remote Host Configuration)
+Nick Hardiman <nhardima@redhat.com>
+:source-highlighter: highlight.js
+:revdate: 11-12-2023
+
+== links 
+
+https://access.redhat.com/articles/rhc
+
+https://red.ht/connector
+> https://console.redhat.com/insights/connector
+
+== cloud connector enables rhcd on Satellite
+
+[source,shell]
+----
+[root@satellite.build.example.com ~]# systemctl status rhcd --no-pager --full
+● rhcd.service - Remote Host Configuration daemon
+   Loaded: loaded (/usr/lib/systemd/system/rhcd.service; enabled; vendor preset: disabled)
+  Drop-In: /etc/systemd/system/rhcd.service.d
+           └─proxy.conf
+   Active: active (running) since Mon 2023-12-11 13:05:01 GMT; 1min 44s ago
+     Docs: https://github.com/redhatinsights/yggdrasil
+ Main PID: 250718 (rhcd)
+    Tasks: 32 (limit: 100508)
+   Memory: 74.5M
+   CGroup: /system.slice/rhcd.service
+           ├─250718 /usr/sbin/rhcd
+           ├─250752 /usr/libexec/yggdrasil-worker-forwarder
+           ├─250753 /usr/libexec/platform-python /usr/libexec/rhc/rhc-worker-playbook.worker
+           └─250754 /usr/libexec/rhc/rhc-package-manager-worker
+
+Dec 11 13:05:01 satellite.build.example.com systemd[1]: Started Remote Host Configuration daemon.
+Dec 11 13:05:19 satellite.build.example.com ansible-ansible.legacy.setup[250870]: Invoked with gather_subset=['all'] gather_timeout=10 filter=[] fact_path=/etc/ansible/facts.d
+Dec 11 13:05:21 satellite.build.example.com ansible-ansible.legacy.dnf[251009]: Invoked with name=['insights-client', 'rhc', 'rhc-worker-playbook'] state=latest allow_downgrade=False autoremove=False bugfix=False cacheonly=False disable_gpg_check=False disable_plugin=[] disablerepo=[] download_only=False enable_plugin=[] enablerepo=[] exclude=[] installroot=/ install_repoquery=True install_weak_deps=True security=False skip_broken=False update_cache=False update_only=False validate_certs=True sslverify=True lock_timeout=30 allowerasing=False nobest=False conf_file=None disable_excludes=None download_dir=None list=None releasever=None
+Dec 11 13:05:21 satellite.build.example.com platform-python[251012]: ansible-ansible.legacy.dnf Invoked with name=['insights-client', 'rhc', 'rhc-worker-playbook'] state=latest allow_downgrade=False autoremove=False bugfix=False cacheonly=False disable_gpg_check=False disable_plugin=[] disablerepo=[] download_only=False enable_plugin=[] enablerepo=[] exclude=[] installroot=/ install_repoquery=True install_weak_deps=True security=False skip_broken=False update_cache=False update_only=False validate_certs=True sslverify=True lock_timeout=30 allowerasing=False nobest=False conf_file=None disable_excludes=None download_dir=None list=None releasever=None
+Dec 11 13:05:27 satellite.build.example.com ansible-ansible.legacy.command[251064]: Invoked with _raw_params=insights-client --status _uses_shell=False stdin_add_newline=True strip_empty_ends=True argv=None chdir=None executable=None creates=None removes=None stdin=None
+Dec 11 13:05:30 satellite.build.example.com ansible-ansible.legacy.command[251116]: Invoked with _raw_params=insights-client --enable-schedule _uses_shell=False stdin_add_newline=True strip_empty_ends=True argv=None chdir=None executable=None creates=None removes=None stdin=None
+Dec 11 13:05:32 satellite.build.example.com ansible-ansible.legacy.setup[251186]: Invoked with gather_subset=['all'] gather_timeout=10 filter=[] fact_path=/etc/ansible/facts.d
+Dec 11 13:05:34 satellite.build.example.com ansible-ansible.legacy.dnf[251347]: Invoked with name=['openscap', 'openscap-scanner', 'scap-security-guide'] state=latest allow_downgrade=False autoremove=False bugfix=False cacheonly=False disable_gpg_check=False disable_plugin=[] disablerepo=[] download_only=False enable_plugin=[] enablerepo=[] exclude=[] installroot=/ install_repoquery=True install_weak_deps=True security=False skip_broken=False update_cache=False update_only=False validate_certs=True sslverify=True lock_timeout=30 allowerasing=False nobest=False conf_file=None disable_excludes=None download_dir=None list=None releasever=None
+Dec 11 13:05:34 satellite.build.example.com platform-python[251354]: ansible-ansible.legacy.dnf Invoked with name=['openscap', 'openscap-scanner', 'scap-security-guide'] state=latest allow_downgrade=False autoremove=False bugfix=False cacheonly=False disable_gpg_check=False disable_plugin=[] disablerepo=[] download_only=False enable_plugin=[] enablerepo=[] exclude=[] installroot=/ install_repoquery=True install_weak_deps=True security=False skip_broken=False update_cache=False update_only=False validate_certs=True sslverify=True lock_timeout=30 allowerasing=False nobest=False conf_file=None disable_excludes=None download_dir=None list=None releasever=None
+[root@satellite.build.example.com ~]# 
+----
+
+
+
+== don't use with Satellite managed hosts
+
+not needed for remediation via Satellite.
+configure Cloud Connector instead. 
+https://www.redhat.com/en/blog/red-hat-satellite-synchronization-insights
+
+https://access.redhat.com/documentation/en-us/red_hat_insights/2023/html-single/red_hat_insights_remediations_guide/index#host-communication-with-insights_red-hat-insights-remediation-guide
+For Red Hat Enterprise Linux systems that are not managed by Red Hat Satellite, you should follow the procedure below to enable the rhc client on those systems.
+
+

@@ -1,0 +1,183 @@
+= upgrade
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 06-02-2024
+
+== upgrade Satellite
+
+Satellite 6 Running `cpdb` or `foreman-maintain upgrade check` failed on candlepin-validate-db
+https://access.redhat.com/solutions/3362821
+
+Updating the Satellite server fails with `liquibase.exception.DatabaseException: org.postgresql.util.PSQLException: FATAL: password authentication failed for user candlepin` error.
+https://access.redhat.com/solutions/3324101
+
+liquibase
+https://www.liquibase.org/
+some kind of database update tool
+
+== procedure 
+
+== upgrade from version 6.13 to 6.14
+
+https://access.redhat.com/documentation/en-us/red_hat_satellite/6.14/html-single/upgrading_red_hat_satellite_to_6.14/index
+[source,shell]
+----
+subscription-manager repos --enable \
+satellite-maintenance-6.14-for-rhel-8-x86_64-rpms
+dnf module enable satellite-maintenance:el8
+satellite-maintain upgrade list-versions
+satellite-maintain upgrade check --target-version 6.14
+tmux
+satellite-maintain upgrade run --target-version 6.14
+dnf needs-restarting --reboothint
+reboot
+----
+
+
+The upgrade is talkative. 
+
+[source,shell]
+----
+[root@satellite.build.example.com satellite_cert]# tmux
+[root@satellite.build.example.com satellite_cert]# satellite-maintain upgrade run --target-version 6.14
+Checking for new version of satellite-maintain...                                                      
+Security: kernel-core-4.18.0-513.11.1.el8_9.x86_64 is an installed security update                     
+Security: kernel-core-4.18.0-477.27.1.el8_8.x86_64 is the currently running version                    
+Nothing to update, can't find new version of satellite-maintain.                                       
+Running Checks before upgrading to Satellite 6.14                                                      
+================================================================================                       
+Skipping pre_upgrade_checks phase as it was already run before.                                        
+To enforce to run the phase, use `upgrade run --phase pre_upgrade_checks`                              
+                                                                                                       
+
+
+Running Procedures before migrating to Satellite 6.14      ================================================================================
+Skipping pre_migrations phase as it was already run before.
+To enforce to run the phase, use `upgrade run --phase pre_migrations`
+
+
+
+Running Migration scripts to Satellite 6.14
+================================================================================
+Setup repositories:                                                   [ALREADY RUN]
+The step was skipped as it was already run and it is marked as run_once. Use --force to enforce the execution.
+--------------------------------------------------------------------------------
+Enable the given stream modules:                                      [OK]
+--------------------------------------------------------------------------------
+Download package(s) :                                                 [OK]
+--------------------------------------------------------------------------------
+Stop applicable services: 
+
+Stopping the following service(s):
+redis, postgresql, pulpcore-api, pulpcore-content, pulpcore-api.socket, pulpcore-content.socket, pulpcore-worker@1.service, pulpcore-worker@2.service, pulpcore-worker@3.service, pulpcore-worker@4.service, tomcat, dynflow-sidekiq@orchestrator, foreman, httpd, foreman.socket, dynflow-sidekiq@worker-1, dynflow-sidekiq@worker-hosts-queue-1, foreman-proxy, foreman-cockpit
+- All services stopped                                                [OK]      
+--------------------------------------------------------------------------------
+Update package(s) :                                                   [OK]
+--------------------------------------------------------------------------------
+Procedures::Installer::Upgrade: 2024-01-15 21:00:16 [NOTICE] [root] Loading installer configuration. This will take some time.
+2024-01-15 21:00:20 [NOTICE] [root] Running installer with log based terminal output at level NOTICE.
+2024-01-15 21:00:20 [NOTICE] [root] Use -l to set the terminal output log level to ERROR, WARN, NOTICE, INFO, or DEBUG. See --full-help for definitions.
+Package versions are locked. Continuing with unlock.
+2024-01-15 21:00:28 [NOTICE] [configure] Starting system configuration.
+2024-01-15 21:00:43 [NOTICE] [configure] 250 configuration steps out of 1784 steps complete.
+2024-01-15 21:00:46 [NOTICE] [configure] 500 configuration steps out of 2655 steps complete.
+2024-01-15 21:00:47 [NOTICE] [configure] 750 configuration steps out of 2655 steps complete.
+2024-01-15 21:00:47 [NOTICE] [configure] 1000 configuration steps out of 2655 steps complete.
+2024-01-15 21:00:47 [NOTICE] [configure] 1250 configuration steps out of 2655 steps complete.
+2024-01-15 21:00:54 [NOTICE] [configure] 1500 configuration steps out of 2657 steps complete.
+2024-01-15 21:00:56 [NOTICE] [configure] 1750 configuration steps out of 2660 steps complete.
+2024-01-15 21:00:57 [NOTICE] [configure] 2000 configuration steps out of 2667 steps complete.
+2024-01-15 21:00:57 [NOTICE] [configure] 2250 configuration steps out of 2668 steps complete.
+2024-01-15 21:01:57 [NOTICE] [configure] 2500 configuration steps out of 2668 steps complete.
+2024-01-15 21:03:28 [NOTICE] [configure] System configurat
+ion has finished.                                                                                      
+  Success!                                                                                             
+  * Satellite is running at https://satellite.build.example.com                                        
+                                                                                                       
+  * To install an additional Capsule on separate machine continue by running:                          
+                                                                                                       
+      capsule-certs-generate --foreman-proxy-fqdn "$CAPSULE" --certs-tar "/root/$CAPSULE-certs.tar"    
+  * Capsule is running at https://satellite.build.example.com:9090                                     
+                                                                                                       
+  The full log is at /var/log/foreman-installer/satellite.log                                          
+Package versions are being locked.
+                                      [OK]
+--------------------------------------------------------------------------------
+Execute upgrade:run rake task:                                        [OK]
+--------------------------------------------------------------------------------
+
+
+Running Procedures after migrating to Satellite 6.14
+================================================================================
+Refresh detected features:                                            [OK]
+--------------------------------------------------------------------------------
+Start applicable services: 
+
+Starting the following service(s):
+redis, postgresql, pulpcore-api, pulpcore-content, pulpcore-worker@1.service, pulpcore-worker@2.service, pulpcore-worker@3.service, pulpcore-worker@4.service, tomcat, dynflow-sidekiq@orchestrator, foreman, httpd, dynflow-sidekiq@worker-1, dynflow-sidekiq@worker-hosts-queue-1, foreman-proxy, foreman-cockpit
+| All services started                                                [OK]      
+--------------------------------------------------------------------------------
+re-enable sync plans: 
+| Total 1 sync plans are now enabled.                                 [OK]      
+--------------------------------------------------------------------------------
+Remove maintenance mode table/chain from nftables/iptables:           [OK]
+--------------------------------------------------------------------------------
+
+
+Running Checks after upgrading to Satellite 6.14
+================================================================================
+Clean old Kernel and initramfs files from tftp-boot:                  [OK]
+--------------------------------------------------------------------------------
+Check number of fact names in database:                               [OK]
+--------------------------------------------------------------------------------
+Check for verifying syntax for ISP DHCP configurations:               [OK]
+--------------------------------------------------------------------------------
+Check whether all services are running:                               [OK]
+--------------------------------------------------------------------------------
+Check whether all services are running using the ping call:           [OK]
+--------------------------------------------------------------------------------
+Check for paused tasks:                                               [OK]
+--------------------------------------------------------------------------------
+Check whether system is self-registered or not:                       [OK]
+--------------------------------------------------------------------------------
+Check if only installed assets are present on the system: 
+- Checking for presence of non-original assets...                     [OK]      
+--------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------
+Upgrade finished.
+[root@satellite.build.example.com satellite_cert]# 
+----
+
+
+== don't upgrade a very old Satellite
+
+Build a new one and migrate hosts across. 
+
+Red Hat Satellite Release Dates
+https://access.redhat.com/articles/1365633
+
+Satellite has gone through a lot of fundamental changes over the years. 
+Upgrading from a very old version has many steps, probably won't work, and probably will deprive you of the will to live. 
+
+upgrade path from version 6.2, released in 2016
+----
+6.2 --> 6.3
+6.3 --> 6.4
+6.4 --> 6.5
+6.5 --> 6.6
+6.6 --> 6.7
+----
+
+Common issues with Satellite 6 upgrade or installation
+https://access.redhat.com/articles/2485491
+
+
+== upgrade a content host
+
+LEAPP
+
+How to upgrade a RHEL version using satellite
+https://access.redhat.com/documentation/en-us/red_hat_satellite/6.14/html/managing_content/managing_errata_content-management#Applying_Errata_to_Hosts_content-management
+
