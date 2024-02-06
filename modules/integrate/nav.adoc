@@ -1,6 +1,6 @@
 * xref:index.adoc[]
 ** xref:red-hat-insights.adoc[]
 ** xref:login-ldap.adoc[]
-** xref:login-sso.adoc[]
+** xref:login-oauth.adoc[]
 ** xref:rhc.adoc[]
 
