@@ -1,0 +1,9 @@
+= Red Hat Insights
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 02-02-2024
+
+
+== links
+
+https://console.redhat.com/insights/connector#SIDs=&tags=
