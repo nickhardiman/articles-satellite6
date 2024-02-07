@@ -3,4 +3,7 @@ Nick Hardiman
 :source-highlighter: highlight.js
 :revdate: 06-02-2024
 
-I'm in the process of experimenting.
+
+== troubleshoot
+
+https://access.redhat.com/articles/6444871[Consolidated Troubleshooting Article for Red Hat Satellite 6.x Repository Issues]
