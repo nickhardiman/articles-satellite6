@@ -5,10 +5,58 @@ Nick Hardiman
 
 Install a new Capsule and link with Satellite. 
 
-[source,shell]
-----
-----
+
 
 == links 
 
 https://access.redhat.com/documentation/en-us/red_hat_satellite/6.14/html/installing_capsule_server/installing-capsule-server
+
+== CLI hands-on-a-keyboard steps
+
+[source,shell]
+----
+# register host
+subscription-manager unregister
+subscription-manager register --org="Default_Organization" --activationkey="ak-build-sat-capsule"
+dnf refresh
+subscription-manager refresh
+# check AK
+subscription-manager identity
+# update RPM packages
+dnf update
+systemctl reboot
+# open firewall
+firewall-cmd --add-service RH-Satellite-6-capsule
+firewall-cmd --add-service RH-Satellite-6-capsule --permanent
+firewall-cmd --list-all
+# enable module, install the installer, check cronyd
+subscription-manager list --all --available --matches 'Red Hat Satellite Infrastructure Subscription'
+dnf module enable satellite-capsule:el8
+dnf install satellite-capsule
+systemctl status chronyd
+# create server certs signed by the build CA
+# copy CA certs
+cd /etc/pki/ca-trust/source/anchors/
+cp /home/nick/*.pem .
+update-ca-trust 
+# check cert trust
+curl https://capsule.source.example.com:9090
+curl https://capsule.source.example.com:9090/v2/features
+# copy server certs
+cp /var/tmp/capsule.source.example.com-certs.tar .
+# disable cockpit, free up port 9090
+systemctl status cockpit.socket
+systemctl stop cockpit.socket
+systemctl disable cockpit.socket
+systemctl status cockpit.socket
+# install
+satellite-installer  \
+  --scenario                          capsule  \
+  --certs-tar-file                    "/root/capsule.source.example.com-certs.tar" \
+  --foreman-proxy-register-in-foreman "true" \
+  --foreman-proxy-foreman-base-url    "https://satellite.build.example.com" \
+  --foreman-proxy-trusted-hosts       "satellite.build.example.com" \
+  --foreman-proxy-trusted-hosts       "capsule.source.example.com" \
+  --foreman-proxy-oauth-consumer-key  "abcxMAVzRQLBMWoJruQi7P9A2vSdhvxz" \
+  --foreman-proxy-oauth-consumer-secret "abcETWKUqVkANs2eyeoJAjzQWQQgzWTz"
+----
