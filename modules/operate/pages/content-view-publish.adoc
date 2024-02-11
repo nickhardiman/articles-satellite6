@@ -1,0 +1,99 @@
+= publish a content view using the CLI
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 11-02-2024
+
+== links
+
+https://access.redhat.com/solutions/3293571
+How to automate content view publish and promote in Red Hat Satellite 6?
+
+https://access.redhat.com/discussions/3497661
+Publish and promote content views automatically for system patching
+
+== list content views
+
+[source,shell]
+----
+[root@satellite.build.example.com ~]# hammer organization list
+---|----------------------|----------------------|-------------|---------------------
+ID | TITLE                | NAME                 | DESCRIPTION | LABEL               
+---|----------------------|----------------------|-------------|---------------------
+1  | Default Organization | Default Organization |             | Default_Organization
+---|----------------------|----------------------|-------------|---------------------
+[root@satellite.build.example.com ~]# 
+[root@satellite.build.example.com ~]# ORG_NAME="Default Organization"
+[root@satellite.build.example.com ~]# 
+[root@satellite.build.example.com ~]# hammer content-view  list --organization "$ORG_NAME"
+----------------|---------------------------------------------|---------------------------------------------|-----------|---------------------|----------------------------------
+CONTENT VIEW ID | NAME                                        | LABEL                                       | COMPOSITE | LAST PUBLISHED      | REPOSITORY IDS                   
+----------------|---------------------------------------------|---------------------------------------------|-----------|---------------------|----------------------------------
+20              | ccv-aap-rhel-8                              | ccv-aap-rhel-8                              | true      | 2024/01/21 14:03:42 | 79, 287, 288, 289, 290, 77       
+10              | ccv-aap-rhel9                               | ccv-aap-rhel9                               | true      | 2024/01/21 18:49:12 | 352, 350, 351, 348, 349, 353     
+8               | ccv-rhel-sat-8                              | rhel-sat-8                                  | true      | 2024/01/21 13:56:40 | 287, 288, 289, 290, 77           
+9               | ccv-rhel-sat-9                              | ccv-rhel-sat-9                              | true      | 2023/12/19 18:21:35 | 350, 351, 348, 349, 353          
+19              | ccv-rhel-sat-capsule                        | ccv-rhel-sat-capsule                        | true      | 2024/01/21 13:53:20 | 287, 288, 289, 290, 239, 238, 237
+6               | cv-rhcdn-ansible_automation_platform-rhel-8 | cv-rhcdn-ansible_automation_platform-rhel-8 | false     | 2023/09/25 14:17:29 | 11                               
+7               | cv-rhcdn-ansible_automation_platform-rhel-9 | cv-rhcdn-ansible_automation_platform-rhel-9 | false     | 2024/01/21 18:47:02 | 12                               
+2               | cv-rhcdn-base-rhel-8                        | cv-rhcdn-base-rhel-8                        | false     | 2024/01/21 13:53:03 | 6, 7, 8, 9                       
+3               | cv-rhcdn-base-rhel-9                        | cv-rhcdn-base-rhel-9                        | false     | 2024/01/21 18:46:12 | 1, 2, 3, 4                       
+4               | cv-rhcdn-satellite_6_client-rhel-8          | cv-rhcdn-satellite_6_client-rhel-8          | false     | 2023/09/25 14:17:17 | 10                               
+5               | cv-rhcdn-satellite_6_client-rhel-9          | cv-rhcdn-satellite_6_client-rhel-9          | false     | 2024/01/21 18:47:31 | 5                                
+18              | cv-satellite-capsule                        | cv-satellite-capsule                        | false     | 2024/01/21 13:48:11 | 234, 235, 236                    
+1               | Default Organization View                   | Default_Organization_View                   | false     | 2023/09/21 16:50:42 |                                  
+----------------|---------------------------------------------|---------------------------------------------|-----------|---------------------|----------------------------------
+[root@satellite.build.example.com ~]# 
+----
+
+
+
+== publish a content view
+
+Publish cv-rhcdn-ansible_automation_platform-rhel-8
+
+[source,shell]
+----
+[root@satellite.build.example.com ~]# CV_ID=6
+[root@satellite.build.example.com ~]# 
+[root@satellite.build.example.com ~]# hammer content-view publish --async --id $CV_ID --organization "$ORG_NAME"
+Content view is being published with task 2db0b389-6a83-4105-87fe-9d8bd7e4920f.
+[root@satellite.build.example.com ~]# 
+[root@satellite.build.example.com ~]# hammer content-view  info --id $CV_ID  --organization  "$ORG_NAME"
+Id:                           6
+Name:                         cv-rhcdn-ansible_automation_platform-rhel-8
+Label:                        cv-rhcdn-ansible_automation_platform-rhel-8
+Composite:                    false
+Description:                  
+Content Host Count:           0
+Solve Dependencies:           false
+Organisation:                 Default Organization
+Yum Repositories:             
+ 1) Id:    11
+    Name:  Red Hat Ansible Automation Platform 2.4 for RHEL 8 x86_64 RPMs
+    Label: Red_Hat_Ansible_Automation_Platform_2_4_for_RHEL_8_x86_64_RPMs
+Container Image Repositories: 
+
+OSTree Repositories:          
+
+Lifecycle Environments:       
+ 1) Id:   1
+    Name: Library
+Versions:                     
+ 1) Id:        6
+    Version:   1.0
+    Published: 2023/09/25 12:49:24
+ 2) Id:        12
+    Version:   2.0
+    Published: 2023/09/25 14:17:29
+ 3) Id:        46
+    Version:   3.0
+    Published: 2024/02/11 16:00:02
+Components:                   
+
+Activation Keys:
+
+[root@satellite.build.example.com ~]# 
+[root@satellite.build.example.com ~]# date +'%F %X'
+2024-02-11 16:08:10
+[root@satellite.build.example.com ~]# 
+----

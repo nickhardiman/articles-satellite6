@@ -2,4 +2,6 @@
 ** xref:upgrade.adoc[]
 ** xref:backup-restore.adoc[]
 ** xref:capsule-add.adoc[]
+** xref:content-view-publish.adoc[]
+** xref:content-view-cleanup.adoc[]
 
