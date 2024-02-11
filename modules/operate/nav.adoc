@@ -3,5 +3,8 @@
 ** xref:backup-restore.adoc[]
 ** xref:capsule-add.adoc[]
 ** xref:content-view-publish.adoc[]
-** xref:content-view-cleanup.adoc[]
+** xref:content-view-delete.adoc[]
+** xref:content-view-purge.adoc[]
+** xref:report-csv-errata.adoc[]
+** xref:report-csv-insights.adoc[]
 

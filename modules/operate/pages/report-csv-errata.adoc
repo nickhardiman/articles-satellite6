@@ -1,0 +1,67 @@
+= create a CSV report of errata
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 11-02-2024
+
+
+== links
+
+Errata are security vulnerability fixes, bug fixes and enhancements eg. RHBA-2023:7746, RHBA-2023:6736, and RHEA-2023:6630. Usually, each fix gets embedded in several RPM packages. 
+
+This command displays a CSV list of hosts and their errata counts.
+
+[source,shell]
+----
+hammer --csv host list --fields "Name,Operating System,Global Status,Security,Bugfix,Enhancement"
+----
+
+You can check each host on the CLI like this.
+
+[source,shell]
+----
+hammer host errata list --host $HOST
+----
+
+and in the web UI at https://$SATELLITE/new/hosts/$HOST#/Content/errata.
+
+[source,shell]
+----
+[root@satellite.build.example.com ~]# hammer --csv host list --fields "Name,Operating System,Global Status,Security,Bugfix,Enhancement"
+Name,Operating System,Global Status,Security,Bugfix,Enhancement
+aapcontrol.build.example.com,RedHat 9.2,Error,60,139,10
+aapee.source.example.com,RedHat 9.2,Error,33,102,5
+aapee.supply.example.com,RedHat 9.2,Error,33,103,5
+aaphub.build.example.com,RedHat 9.2,Error,37,104,4
+capsule.source.example.com,RedHat 8.9,Error,0,0,0
+capsule.supply.example.com,RHEL 8.8,Error,0,0,0
+dev.build.example.com,RedHat 9.3,Error,2,1,0
+gene-debose.build.example.com,RHEL 8.8,Error,21,21,4
+git.source.example.com,RedHat 9.3,Error,0,0,0
+holly-carolla.build.example.com,RHEL 8.8,Error,35,71,5
+idreplica.source.example.com,RedHat 9.2,Error,44,124,5
+idreplica.supply.example.com,RedHat 9.2,Error,44,126,5
+message.supply.example.com,RedHat 9.2,Error,33,103,5
+monitor.supply.example.com,RedHat 9.2,Error,37,104,5
+satellite.build.example.com,RHEL 8.8,Warning,,,
+secret.source.example.com,RedHat 9.2,Error,43,115,5
+test02.build.example.com,RedHat 9.2,Error,34,90,5
+test.build.example.com,RedHat 9.3,Error,2,1,0
+[root@satellite.build.example.com ~]# 
+----
+
+[source,shell]
+----
+[root@satellite.build.example.com ~]# HOST=aapcontrol.build.example.com
+[root@satellite.build.example.com ~]#
+[root@satellite.build.example.com ~]# hammer host errata list --host $HOST
+-------|----------------|-------------|---------------------------------------------------------------------|------------
+ID     | ERRATUM ID     | TYPE        | TITLE                                                               | INSTALLABLE
+-------|----------------|-------------|---------------------------------------------------------------------|------------
+310389 | RHSA-2024:0108 | security    | Moderate: nss security update                                       | true       
+...
+172515 | RHEA-2023:6605 | enhancement | tzdata bug fix and enhancement update                               | true       
+...
+457    | RHBA-2023:0341 | bugfix      | iputils bug fix update                                              | true       
+-------|----------------|-------------|---------------------------------------------------------------------|------------
+[root@satellite.build.example.com ~]# 
+----

@@ -1,0 +1,19 @@
+= create a CSV report of Insights recommendations
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 11-02-2024
+
+
+== links
+
+Insights advisor recommendations 
+https://console.redhat.com/insights/advisor/systems/
+
+https://access.redhat.com/articles/6365831
+How to Export Your Data from console.redhat.com, using crhc-cli - Red Hat Customer Portal
+Exporting the Advisor Data in a Single CSV
+
+https://github.com/C-RH-C/crhc-cli
+the crhc command line tool that simplifies the use of the C.RH.C API available at console.redhat.com
+
+https://crhc-cli.readthedocs.io/en/latest/

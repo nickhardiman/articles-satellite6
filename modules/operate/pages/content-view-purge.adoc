@@ -1,0 +1,96 @@
+= purge old content view versions using the CLI
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 11-02-2024
+
+Remove oldest published versions from content view _cv-rhcdn-ansible_automation_platform-rhel-8_.
+
+== links
+
+https://access.redhat.com/solutions/2760531
+How to remove old content view versions in Red Hat Satellite 6 using CLI/hammer?
+
+
+== list content views
+
+
+[source,shell]
+----
+[root@satellite.build.example.com ~]# ORG_ID=1
+[root@satellite.build.example.com ~]# hammer content-view  list --organization-id $ORG_ID
+----------------|---------------------------------------------|---------------------------------------------|-----------|---------------------|----------------------------------
+CONTENT VIEW ID | NAME                                        | LABEL                                       | COMPOSITE | LAST PUBLISHED      | REPOSITORY IDS                   
+----------------|---------------------------------------------|---------------------------------------------|-----------|---------------------|----------------------------------
+20              | ccv-aap-rhel-8                              | ccv-aap-rhel-8                              | true      | 2024/02/11 16:00:09 | 361, 287, 288, 289, 290, 77      
+10              | ccv-aap-rhel9                               | ccv-aap-rhel9                               | true      | 2024/01/21 18:49:12 | 352, 350, 351, 348, 349, 353     
+8               | ccv-rhel-sat-8                              | rhel-sat-8                                  | true      | 2024/01/21 13:56:40 | 287, 288, 289, 290, 77           
+9               | ccv-rhel-sat-9                              | ccv-rhel-sat-9                              | true      | 2023/12/19 18:21:35 | 350, 351, 348, 349, 353          
+19              | ccv-rhel-sat-capsule                        | ccv-rhel-sat-capsule                        | true      | 2024/01/21 13:53:20 | 287, 288, 289, 290, 237, 238, 239
+6               | cv-rhcdn-ansible_automation_platform-rhel-8 | cv-rhcdn-ansible_automation_platform-rhel-8 | false     | 2024/02/11 16:00:02 | 11                               
+7               | cv-rhcdn-ansible_automation_platform-rhel-9 | cv-rhcdn-ansible_automation_platform-rhel-9 | false     | 2024/01/21 18:47:02 | 12                               
+2               | cv-rhcdn-base-rhel-8                        | cv-rhcdn-base-rhel-8                        | false     | 2024/01/21 13:53:03 | 6, 7, 8, 9                       
+3               | cv-rhcdn-base-rhel-9                        | cv-rhcdn-base-rhel-9                        | false     | 2024/01/21 18:46:12 | 1, 2, 3, 4                       
+4               | cv-rhcdn-satellite_6_client-rhel-8          | cv-rhcdn-satellite_6_client-rhel-8          | false     | 2023/09/25 14:17:17 | 10                               
+5               | cv-rhcdn-satellite_6_client-rhel-9          | cv-rhcdn-satellite_6_client-rhel-9          | false     | 2024/01/21 18:47:31 | 5                                
+18              | cv-satellite-capsule                        | cv-satellite-capsule                        | false     | 2024/01/21 13:48:11 | 234, 235, 236                    
+1               | Default Organization View                   | Default_Organization_View                   | false     | 2023/09/21 16:50:42 |                                  
+----------------|---------------------------------------------|---------------------------------------------|-----------|---------------------|----------------------------------
+[root@satellite.build.example.com ~]# 
+[root@satellite.build.example.com ~]# CV_ID=10
+[root@satellite.build.example.com ~]# 
+[root@satellite.build.example.com ~]# hammer content-view version list --content-view-id $CV_ID
+---|--------------------|---------|---------------------------------------------|-------------------------------
+ID | NAME               | VERSION | DESCRIPTION                                 | LIFECYCLE ENVIRONMENTS        
+---|--------------------|---------|---------------------------------------------|-------------------------------
+45 | ccv-aap-rhel9 10.0 | 10.0    |                                             | Library, lce-build, lce-deploy
+33 | ccv-aap-rhel9 9.0  | 9.0     | latest RPMs                                 | current                       
+32 | ccv-aap-rhel9 8.0  | 8.0     | latest RPMs                                 |                               
+31 | ccv-aap-rhel9 7.0  | 7.0     | sat client                                  |                               
+30 | ccv-aap-rhel9 6.0  | 6.0     | https://access.redhat.com/solutions/3372201 |                               
+27 | ccv-aap-rhel9 5.0  | 5.0     | missing pkgs                                |                               
+26 | ccv-aap-rhel9 4.0  | 4.0     | dec 23 2                                    |                               
+24 | ccv-aap-rhel9 3.0  | 3.0     | dec 23                                      |                               
+19 | ccv-aap-rhel9 2.0  | 2.0     | added aap and rhel9 cvs                     |                               
+18 | ccv-aap-rhel9 1.0  | 1.0     | initial                                     |                               
+---|--------------------|---------|---------------------------------------------|-------------------------------
+[root@satellite.build.example.com ~]# 
+----
+
+== delete all except newest versions
+
+Delete all except for 3 newest unused versions.
+Versions 10 and 9 are used. 
+Versions 8, 7 and 6 are kept.
+The rest are deleted. 
+
+[source,shell]
+----
+[root@satellite.build.example.com ~]# hammer content-view purge --count 3 --id $CV_ID
+[.................................................................................................................................................................................] [100%]
+Version '1.0' of content view 'ccv-aap-rhel9' deleted.
+[.................................................................................................................................................................................] [100%]
+Version '2.0' of content view 'ccv-aap-rhel9' deleted.
+[.................................................................................................................................................................................] [100%]
+Version '3.0' of content view 'ccv-aap-rhel9' deleted.
+[.................................................................................................................................................................................] [100%]
+Version '4.0' of content view 'ccv-aap-rhel9' deleted.
+[.................................................................................................................................................................................] [100%]
+Version '5.0' of content view 'ccv-aap-rhel9' deleted.
+[root@satellite.build.example.com ~]# 
+[root@satellite.build.example.com ~]# hammer content-view version list --content-view-id $CV_ID 
+---|--------------------|---------|---------------------------------------------|-------------------------------
+ID | NAME               | VERSION | DESCRIPTION                                 | LIFECYCLE ENVIRONMENTS        
+---|--------------------|---------|---------------------------------------------|-------------------------------
+45 | ccv-aap-rhel9 10.0 | 10.0    |                                             | Library, lce-build, lce-deploy
+33 | ccv-aap-rhel9 9.0  | 9.0     | latest RPMs                                 | current                       
+32 | ccv-aap-rhel9 8.0  | 8.0     | latest RPMs                                 |                               
+31 | ccv-aap-rhel9 7.0  | 7.0     | sat client                                  |                               
+30 | ccv-aap-rhel9 6.0  | 6.0     | https://access.redhat.com/solutions/3372201 |                               
+---|--------------------|---------|---------------------------------------------|-------------------------------
+[root@satellite.build.example.com ~]# 
+----
+
+
+[source,shell]
+----
+----
