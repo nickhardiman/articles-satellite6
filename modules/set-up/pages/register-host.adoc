@@ -21,3 +21,85 @@ sudo yum localinstall http://satellite1.lab.example.com/pub/katello-ca-consumer-
 ....
 sudo subscription-manager register --org="myorg" --environment Library
 ....
+
+
+== register host with curl
+
+Hosts > Register Host 
+
+Only capsules with enabled `Templates` and `Registration` features are displayed.
+
+----
+Organization      Default Organization
+Location          build
+Host group        -
+Operating system  RHEL 8.8 Initial configuration template: Linux host_init_config default
+Capsule           satellite.build.example.com
+https://satellite.build.example.com:9090/register 
+Insecure          -
+Activation Keys   ak-build-aap-rhel-8
+----
+
+This Produces a Registration command.
+Copy and paste into the host.
+
+----
+curl -sS  'https://satellite.build.example.com:9090/register?activation_keys=ak-build-aap-rhel-8&location_id=5&operatingsystem_id=1&organization_id=1&update_packages=false' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo0LCJpYXQiOjE3MDc2OTA3NjUsImp0aSI6IjI2ZTNjOTczZjkyNjdiNjhkYTFiMjIyNzkyNGVhY2Q4MDcwMjI0NzJkNmUzYzAzYmEwMGJkODQ5OWQxOTU0MTUiLCJleHAiOjE3MDc3MDUxNjUsInNjb3BlIjoicmVnaXN0cmF0aW9uI2dsb2JhbCByZWdpc3RyYXRpb24jaG9zdCJ9.fw1bsKx62jLbu6KnkII0303DqpZTmlvFR9iS-x9bB38' | bash
+----
+
+
+=== enable `Templates` and `Registration` features
+
+[source,shell]
+....
+satellite-installer  \
+    --foreman-proxy-registration true   \
+    --foreman-proxy-templates  true   \
+    --foreman-proxy-template-url 'http://satellite.build.example.com:8000'
+....
+
+[source,shell]
+----
+[root@satellite.build.example.com ~]# satellite-installer    --foreman-proxy-registration true     --foreman-proxy-templates  true     --foreman-proxy-template-url 'http://satellite.build.example.com:8000'
+2024-02-11 22:05:25 [NOTICE] [root] Loading installer configuration. This will take some time.
+2024-02-11 22:05:30 [NOTICE] [root] Running installer with log based terminal output at level NOTICE.
+2024-02-11 22:05:30 [NOTICE] [root] Use -l to set the terminal output log level to ERROR, WARN, NOTICE, INFO, or DEBUG. See --full-help for definitions.
+Package versions are locked. Continuing with unlock.
+2024-02-11 22:05:38 [NOTICE] [configure] Starting system configuration.
+2024-02-11 22:05:53 [NOTICE] [configure] 250 configuration steps out of 1790 steps complete.
+2024-02-11 22:05:57 [NOTICE] [configure] 500 configuration steps out of 2649 steps complete.
+2024-02-11 22:05:57 [NOTICE] [configure] 750 configuration steps out of 2649 steps complete.
+2024-02-11 22:05:57 [NOTICE] [configure] 1000 configuration steps out of 2649 steps complete.
+2024-02-11 22:05:58 [NOTICE] [configure] 1250 configuration steps out of 2649 steps complete.
+2024-02-11 22:06:05 [NOTICE] [configure] 1500 configuration steps out of 2651 steps complete.
+2024-02-11 22:06:07 [NOTICE] [configure] 1750 configuration steps out of 2655 steps complete.
+2024-02-11 22:06:07 [NOTICE] [configure] 2000 configuration steps out of 2661 steps complete.
+2024-02-11 22:06:07 [NOTICE] [configure] 2250 configuration steps out of 2662 steps complete.
+2024-02-11 22:06:47 [NOTICE] [configure] 2500 configuration steps out of 2662 steps complete.
+2024-02-11 22:06:57 [NOTICE] [configure] System configuration has finished.
+  Success!
+  * Satellite is running at https://satellite.build.example.com
+
+  * To install an additional Capsule on separate machine continue by running:
+
+      capsule-certs-generate --foreman-proxy-fqdn "$CAPSULE" --certs-tar "/root/$CAPSULE-certs.tar"
+  * Capsule is running at https://satellite.build.example.com:9090
+
+  The full log is at /var/log/foreman-installer/satellite.log
+Package versions are being locked.
+[root@satellite.build.example.com ~]# 
+----
+
+Check
+
+[source,shell]
+----
+[root@satellite.build.example.com ~]# satellite-installer --full-help > satellite-installer-full-help.txt
+[root@satellite.build.example.com ~]# 
+[root@satellite.build.example.com ~]# grep -E '\-\-foreman.*proxy.*registration |\-\-foreman.*proxy\-template' ./satellite-installer-full-help.txt
+    --foreman-proxy-registration                                                 Enable Registration feature (current: true)
+    --foreman-proxy-template-url                                                 URL a client should use for provisioning templates (current: "http://satellite.build.example.com:8000")
+    --foreman-proxy-templates                                                    Enable templates feature (current: true)
+    --foreman-proxy-templates-listen-on                                          Templates proxy to listen on https, http, or both (current: "both")
+[root@satellite.build.example.com ~]#
+----

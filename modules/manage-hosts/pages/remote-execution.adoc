@@ -10,3 +10,29 @@ Nick Hardiman
 https://www.redhat.com/en/blog/getting-started-red-hat-satellite-remote-execution
 
 https://www.redhat.com/en/blog/red-hat-satellite-612-and-remote-execution-now-featuring-pull-mode
+
+
+== allow foreman-proxy to log into a content host as root
+
+Distribute the foreman-proxy SSH public key to all hosts.
+
+Copy content of satellite file
+/usr/share/foreman-proxy/.ssh/id_rsa_foreman_proxy.pub
+to content host file
+/root/.ssh/authorized_keys
+
+Each capsule gets its own generated SSH key pair. 
+
+
+== add new user rexuser
+
+add rexuser to all hosts
+
+add passwordless sudo, same as ansible-user
+
+https://access.redhat.com/solutions/2650071
+How to setup Remote Execution using non-root user on RHEL systems connected to Red Hat Satellite 6?
+
+https://access.redhat.com/solutions/5460381
+Configure the satellite remote execution to use SSH key other than foreman-proxy SSH key
+
