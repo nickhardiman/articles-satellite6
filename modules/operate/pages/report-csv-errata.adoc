@@ -8,6 +8,8 @@ Nick Hardiman
 
 Errata are security vulnerability fixes, bug fixes and enhancements eg. RHBA-2023:7746, RHBA-2023:6736, and RHEA-2023:6630. Usually, each fix gets embedded in several RPM packages. 
 
+== generate a CSV with hammer
+
 This command displays a CSV list of hosts and their errata counts.
 
 [source,shell]
@@ -44,9 +46,6 @@ message.supply.example.com,RedHat 9.2,Error,33,103,5
 monitor.supply.example.com,RedHat 9.2,Error,37,104,5
 satellite.build.example.com,RHEL 8.8,Warning,,,
 secret.source.example.com,RedHat 9.2,Error,43,115,5
-test02.build.example.com,RedHat 9.2,Error,34,90,5
-test.build.example.com,RedHat 9.3,Error,2,1,0
-[root@satellite.build.example.com ~]# 
 ----
 
 [source,shell]
@@ -65,3 +64,18 @@ ID     | ERRATUM ID     | TYPE        | TITLE                                   
 -------|----------------|-------------|---------------------------------------------------------------------|------------
 [root@satellite.build.example.com ~]# 
 ----
+
+== generate a CSV with report template
+
+Satellite can produce a CSV report listing errata with errata severity. 
+
+
+Monitor > Reports > Report Templates > Host - Available Errata > Generate
+
+You were asking about an errata report that includes severity (none, low, moderate, important, and critical). The hammer command that queries Satellite does not include this. The crhc command that queries console.redhat.com does not include it either. 
+
+There are customizable report templates that we can use. Try running Host - Available Errata. The report contains these fields: Host,Operating System,Environment,Erratum,Type,Published,Available since,Severity,Packages,CVEs,Reboot suggested
+
+Do you also want to raise a customer support case, to extend the hammer or crhc command? 
+
+A report for 100 hosts can take less than 5 minutes to generate and contain more than 10,000 lines.

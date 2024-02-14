@@ -9,11 +9,72 @@ Nick Hardiman
 Insights advisor recommendations 
 https://console.redhat.com/insights/advisor/systems/
 
-https://access.redhat.com/articles/6365831
-How to Export Your Data from console.redhat.com, using crhc-cli - Red Hat Customer Portal
-Exporting the Advisor Data in a Single CSV
-
 https://github.com/C-RH-C/crhc-cli
 the crhc command line tool that simplifies the use of the C.RH.C API available at console.redhat.com
 
 https://crhc-cli.readthedocs.io/en/latest/
+
+
+== produce an Insights advisor report in CSV format
+
+Use the https://crhc-cli.readthedocs.io/en/latest/[crhc] tool to export data from the central Red Hat cloud console.
+Use this tool to https://access.redhat.com/articles/6365831#exporting-the-advisor-data-in-a-single-csv-28[export the Advisor Data in a Single CSV].
+
+
+== install
+
+Choose a RHEL host with access to https://github.com/C-RH-C/crhc-cli/releases/ and https://console.redhat.com/.
+
+
+== configure 
+
+Follow the https://crhc-cli.readthedocs.io/en/latest/quickstart.html[quick start instructions]
+
+Download the latest executable file _crhc-linux-x64_ from https://github.com/C-RH-C/crhc-cli/releases/.
+
+[source,shell]
+----
+[nick@dev ~]$ mkdir crhc
+[nick@dev ~]$ cd crhc
+[nick@dev crhc]$ 
+[nick@dev crhc]$ source ~/lab-build-proxy.sh 
+[nick@dev crhc]$ 
+[nick@dev crhc]$ curl --silent --location --output crhc  https://github.com/C-RH-C/crhc-cli/releases/download/1.15.15/crhc-linux-x64
+[nick@dev crhc]$ 
+[nick@dev crhc]$ chmod 754 ./crhc
+[nick@dev crhc]$ 
+----
+
+Get a token from https://console.redhat.com/openshift/token/show
+
+[source,shell]
+----
+[nick@dev crhc]$ TOKEN=eyJhbGciOi...(hundreds of characters)...
+[nick@dev crhc]$ ./crhc login --token $TOKEN
+Authenticated and ready to go!
+[nick@dev crhc]$ 
+----
+
+
+== report
+
+Pick a category from https://access.redhat.com/articles/6365831[How to Export Your Data from console.redhat.com, using crhc-cli].
+
+Create the report.
+
+[source,shell]
+----
+./crhc advisor systems --csv
+----
+
+Report is now available in file /tmp/advisor_systems.csv.
+
+[source,shell]
+----
+system_uuid,display_name,last_seen,stale_at,recommendations,critical,important,moderate,low,incident
+123a3fe0-7b6e-4c73-8d5b-05f332120608,host1.example.com,2024-02-12T05:39:41.577837Z,2024-02-13T10:39:41.577837Z,9,0,5,3,1,2
+456090a-bebf-49fe-94d7-8d4e42e52312,host2.example.com,2024-02-12T01:35:27.789511Z,2024-02-13T06:35:27.464511Z,8,0,2,5,1,1
+8cacf185-6d33-48b2-8b39-be8095f12840,host3.example.com,2024-02-12T09:59:34.572255Z,2024-02-13T14:59:34.572255Z,8,1,2,2,3,0
+...
+----
+

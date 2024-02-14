@@ -1,0 +1,57 @@
+= create a report about content host compliance to a security policy
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 11-02-2024
+
+
+== links
+
+I set up and ran a compliance scan via Satellite with OpenSCAP. 
+https://access.redhat.com/documentation/en-us/red_hat_satellite/6.14/html/managing_security_compliance/index
+
+
+== manual setup 
+
+Configure Satellite for SCAP.
+This is inital configuration. 
+
+* Load bundled SCAP content into Satellite
+* Load RHEL 9 SCAP content
+* Load Ansible role _theforeman.foreman_scap_client_
+* Override Ansible variables
+* Create a compliance policy
+
+Configure Satellite for checking a content host 
+
+* Associate the security policy with host
+* Associate the Ansible role with the host
+* Check the Satellite client repository is enabled
+
+Configure the content host
+
+* Run the Ansible role to install and configure _foreman_scap_client_
+
+== run a compliance scan on the content host
+
+Check the content host.
+This is a repeatable process eg. scan once a week
+
+* Run an OpenSCAP scan
+* View report
+
+== automated setup 
+
+Is there a ready-made playbook or series of hammer commands for this?
+ (I haven't yet gone through 
+@sscheib
+’s playbook yet https://github.com/sscheib/ansible_satellite/blob/main/20_satellite_openscap.yml)
+
+It's a connected network. Should I forget Satellite and look at Insights and console.redhat.com instead?
+
+
+== Insights 
+
+if openscap scanner is installed on a machine, this command uploads to RH console
+?
+
+insights-client   --compliance
