@@ -4,3 +4,14 @@ Nick Hardiman <nhardima@redhat.com>
 :toc: 
 :revdate: 18-02-2024
 
+== links 
+
+https://access.redhat.com/documentation/en-us/red_hat_satellite/6.14/html-single/installing_satellite_server_in_a_connected_network_environment/index
+
+How to configure Kerberos based Single Sign-On (SSO) using Red Hat Satellite 6?
+https://access.redhat.com/solutions/3321561
+
+Red Hat Satellite 6 > FreeIPA/IdM
+
+Red Hat Satellite 6 > Active Directory
+
