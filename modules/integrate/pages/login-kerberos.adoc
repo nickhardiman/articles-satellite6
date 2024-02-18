@@ -1,0 +1,6 @@
+= integrate Satellite with IdM kerberos
+Nick Hardiman <nhardima@redhat.com>
+:source-highlighter: highlight.js
+:toc: 
+:revdate: 18-02-2024
+

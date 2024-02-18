@@ -5,10 +5,21 @@ Nick Hardiman
 
 == links
 
+https://access.redhat.com/documentation/en-us/red_hat_satellite/6.14/html/installing_satellite_server_in_a_connected_network_environment/configuring_external_authentication_satellite#Using_LDAP_satellite
 
-== IDM LDAP
 
-Adminster > Authentication Sources > LDAP > Create 
+== add LDAP configuration to Satellite
+
+Connect Satellite to IDM LDAP.
+
+The LDAP service is part of IDM. 
+This is already set up with a read-only system account named _bind_user_.
+
+Use the Satellite web UI. 
+
+Create an LDAP source.
+
+Administer > Authentication Sources > LDAP > Create 
 https://satellite.build.example.com/auth_source_ldaps/new
 
 LDAP server 
@@ -61,9 +72,29 @@ Organisations            Default Organization
 ----
 
 
-=== user privileges after first login 
+=== log in with an LDAP user
 
-Adminster > Users > nick 
+The same form is used for local login and LDAP login. 
+
+* URL: https://satellite.build.example.com/users/login
+
+* user: nick
+* password: Password;1
+
+* user: taco
+* password: redhat
+
+[source,shell]
+----
+Permission denied
+You are not authorised to perform this action.
+Please request one of the required permissions listed below from a Satellite administrator:
+access_dashboard
+----
+
+== add user privileges after first login 
+
+Administer > Users > nick 
 Administrator
 
 User 
@@ -81,6 +112,20 @@ Language               Browser locale
 Timezone               Browser timezone
 Authorised by *        LDAP-idm
 ----
+
+
+
+
+== delete LDAP users and config from Satellite
+
+Checkbox is ticked for _Automatically Create Accounts In Satellite_.
+Administer > Authentication Sources > idm
+
+Delete LDAP users copied locally.
+
+Administer > Users > Delete
+
+Administer > Authentication Sources > Delete
 
 
 

@@ -1,0 +1,73 @@
+= sync RPM packages
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 17-02-2024
+
+synchronize RPM packages 
+download packages 
+
+
+== location
+
+/var/lib/pulp/media/artifact/
+
+hashed file system
+
+[source,shell]
+----
+[root@satellite.build.example.com ~]# ls /var/lib/pulp/media/artifact/
+00  0d  1a  27  34  41  4e  5b  68  75  82  8f  9c  a9  b6  c3  d0  dd  ea  f7
+01  0e  1b  28  35  42  4f  5c  69  76  83  90  9d  aa  b7  c4  d1  de  eb  f8
+02  0f  1c  29  36  43  50  5d  6a  77  84  91  9e  ab  b8  c5  d2  df  ec  f9
+03  10  1d  2a  37  44  51  5e  6b  78  85  92  9f  ac  b9  c6  d3  e0  ed  fa
+04  11  1e  2b  38  45  52  5f  6c  79  86  93  a0  ad  ba  c7  d4  e1  ee  fb
+05  12  1f  2c  39  46  53  60  6d  7a  87  94  a1  ae  bb  c8  d5  e2  ef  fc
+06  13  20  2d  3a  47  54  61  6e  7b  88  95  a2  af  bc  c9  d6  e3  f0  fd
+07  14  21  2e  3b  48  55  62  6f  7c  89  96  a3  b0  bd  ca  d7  e4  f1  fe
+08  15  22  2f  3c  49  56  63  70  7d  8a  97  a4  b1  be  cb  d8  e5  f2  ff
+09  16  23  30  3d  4a  57  64  71  7e  8b  98  a5  b2  bf  cc  d9  e6  f3
+0a  17  24  31  3e  4b  58  65  72  7f  8c  99  a6  b3  c0  cd  da  e7  f4
+0b  18  25  32  3f  4c  59  66  73  80  8d  9a  a7  b4  c1  ce  db  e8  f5
+0c  19  26  33  40  4d  5a  67  74  81  8e  9b  a8  b5  c2  cf  dc  e9  f6
+[root@satellite.build.example.com ~]# 
+----
+
+RPM package files have a serial number, not a meaningful jsname. 
+
+[source,shell]
+----
+[root@satellite.build.example.com ~]# ls /var/lib/pulp/media/artifact/00/
+028fc09d091846333b7ddc529dbd8a71e13703ad2912fee8f6accc60b58df2
+0f8b4acef949dab9877dde0d2cc56095081fc4afd37251f9e1fc9aab19042a
+24cd33ca56a8783d2071e97707e913b7d8482f0ce5250c979353a786bdb9b7
+2a27bd9bcf4a44b93347ec9860254fc4f899a0e3c31c863c9021816cc2e870
+4cf3f506751f2df18f24e17aa022222aca5e74a80465f06003f4252e6fce82
+60287e2c279285d98831affa52f05225e9cdd3ccc2040de72896baaa828863
+765719f0ae1a8b21d28a87542a627d1d98d7420c2506850adc99e16ddaf709
+97fdb40a1f83e56d5bf91160c07151b7cdd64f829fc0e328cdf3b43c2b4fa6
+a670c4d9c3d94fc27178ef4ca900addbad7c990d99360bb897c0a9ebfc9102
+dc188f879d979120887e2b92958bdcabd1711ed9ddc950a3f4c090bfbe7276
+[root@satellite.build.example.com ~]# 
+----
+
+RPM package file
+
+[source,shell]
+----
+[root@satellite.build.example.com ~]# file /var/lib/pulp/media/artifact/00/028fc09d091846333b7ddc529dbd8a71e13703ad2912fee8f6accc60b58df2 
+/var/lib/pulp/media/artifact/00/028fc09d091846333b7ddc529dbd8a71e13703ad2912fee8f6accc60b58df2: RPM v3.0 bin noarch iwl5000-firmware-8.83.5.1_1-114.el8_8.1
+[root@satellite.build.example.com ~]# 
+[root@satellite.build.example.com ~]# file /var/lib/pulp/media/artifact/00/0f8b4acef949dab9877dde0d2cc56095081fc4afd37251f9e1fc9aab19042a
+/var/lib/pulp/media/artifact/00/0f8b4acef949dab9877dde0d2cc56095081fc4afd37251f9e1fc9aab19042a: RPM v3.0 bin perl-User-pwent-0:1.03-480.el9
+[root@satellite.build.example.com ~]# 
+----
+
+== space used 
+
+[source,shell]
+----
+[root@satellite.build.example.com ~]# du -sch /var/lib/pulp/media/artifact/
+9.5G	/var/lib/pulp/media/artifact/
+9.5G	total
+[root@satellite.build.example.com ~]# 
+----

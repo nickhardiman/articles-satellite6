@@ -8,4 +8,5 @@
 ** xref:report-csv-errata.adoc[]
 ** xref:report-csv-insights.adoc[]
 ** xref:ansible-collection.adoc[]
+** xref:rest-api.adoc[]
 

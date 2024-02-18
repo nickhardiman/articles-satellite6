@@ -7,3 +7,4 @@
 ** xref:register-host.adoc[]
 ** xref:ansible.adoc[]
 ** xref:simple-content-access.adoc[]
+** xref:sync-packages.adoc[]

@@ -1,9 +1,14 @@
-= login with OAuth 
-Nick Hardiman 
+= integrate Satellite with Red Hat SSO (Single Sign-On)/Keycloak
+Nick Hardiman <nhardima@redhat.com>
 :source-highlighter: highlight.js
-:revdate: 06-02-2024
+:toc: 
+:revdate: 26-10-2023
+
 
 SSO (Single Sign On)
+
+* Satellite FQDN: satellite.build.example.com
+* Keycloak FQDN: secret.source.example.com
 
 == links
 
@@ -27,3 +32,290 @@ https://access.redhat.com/documentation/en-us/red_hat_satellite/6.13/html-single
 
 LDAP
 https://satellite.build.example.com/auth_source_ldaps/new
+
+satellite.build.example.com-foreman-openidc
+
+
+== OIDC auth - integrate Satellite and Keycloak
+
+
+this looks like LDAP
+https://satellite.build.example.com/auth_source_ldaps/new
+
+5.9. Configuring Satellite with Red Hat Single Sign-On Authentication
+https://access.redhat.com/documentation/en-us/red_hat_satellite/6.13/html-single/installing_satellite_server_in_a_connected_network_environment/index#Configuring_Project_with_Keycloak_Authentication_keycloak-general
+https://access.redhat.com/documentation/en-us/red_hat_satellite/6.14/html-single/installing_satellite_server_in_a_connected_network_environment/index#Configuring_Project_with_Keycloak_Authentication_keycloak-general
+
+[source,shell]
+----
+satellite-maintain packages install mod_auth_openidc keycloak-httpd-client-install
+----
+
+[source,shell]
+----
+keycloak-httpd-client-install \
+  --app-name foreman-openidc \
+  --keycloak-server-url "https://secret.source.example.com" \
+  --keycloak-admin-username "admin" \
+  --keycloak-realm "IdM" \
+  --keycloak-admin-realm master \
+  --keycloak-auth-role root-admin \
+  -t openidc\
+  -l /users/extlogin \
+  --force  \
+  --tls-verify false
+----
+
+!!! certs now fixed
+
+[source,shell]
+----
+[root@satellite.build.example.com CA]# keycloak-httpd-client-install   --app-name foreman-openidc   --keycloak-server-url "https://secret.source.example.com"   --keycloak-admin-username "admin"   --keycloak-realm "IdM"   --keycloak-admin-realm master   --keycloak-auth-role root-admin   -t openidc  -l /users/extlogin   --force --tls-verify false
+enter admin password: 
+[Step  1] Assure HTTP config directory is present
+[Step  2] Assure HTTP federation directory is present
+[Step  3] Set up template environment
+[Step  4] Build OIDC httpd config file
+[Step  5] Build Keycloak OIDC clientRepresentation
+[Step  6] Connect to Keycloak Server as admin
+/usr/lib/python3.6/site-packages/urllib3/connectionpool.py:852: InsecureRequestWarning: Unverified HTTPS request is being made. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning)
+[Step  7] Query realms from Keycloak server
+/usr/lib/python3.6/site-packages/urllib3/connectionpool.py:852: InsecureRequestWarning: Unverified HTTPS request is being made. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning)
+[Step  8] Use existing realm on Keycloak server
+[Step  9] Query realm clients from Keycloak server
+/usr/lib/python3.6/site-packages/urllib3/connectionpool.py:852: InsecureRequestWarning: Unverified HTTPS request is being made. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning)
+[Step 10] Creating new client from native
+/usr/lib/python3.6/site-packages/urllib3/connectionpool.py:852: InsecureRequestWarning: Unverified HTTPS request is being made. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning)
+[Step 11] Completed Successfully
+[root@satellite.build.example.com CA]# 
+----
+
+Adds client to keycloak
+
+https://secret.source.example.com/auth/admin/master/console/#/realms/IdM/clients
+satellite.build.example.com-foreman-openidc
+
+configures  Satellite 
+
+https://satellite.build.example.com/settings
+Settings > Authentication
+OAuth active	Yes Satellite will use OAuth for API authorisation
+OAuth consumer key	***** OAuth consumer key
+OAuth consumer secret	***** OAuth consumer secret
+
+[source,shell]
+----
+satellite-installer --foreman-keycloak true \
+--foreman-keycloak-app-name "foreman-openidc" \
+--foreman-keycloak-realm "IdM"
+----
+
+Restart Apache. 
+
+[source,shell]
+----
+systemctl restart httpd
+----
+
+== configure Satellite client settings in keycloak
+
+View the new client. 
+
+https://secret.source.example.com/auth/admin/master/console/#/realms/IdM/clients > satellite.build.example.com-foreman-openidc
+
+The Satellite configuration commands set many values.
+
+There are a dozen tabs with many attributes.
+
+. Settings
+. Credentials
+. Keys
+. Roles
+. Client Scopes 
+. Mappers 
+. Scope 
+. Revocation
+. Sessions 
+. Offline Access 
+. Clustering
+. Installation 
+
+=== Settings 
+
+----
+Client ID                    satellite.build.example.com-foreman-openidc
+Name                         -
+Description                  -
+Enabled                      On
+Always Display in Console    Off
+Consent Required    Off
+Login Theme                  -
+Client Protocol              openid-connect
+Access Type                  confidential
+Standard Flow Enabled        On
+Implicit Flow Enabled        Off
+Direct Access Grants Enabled Off
+Service Accounts Enabled     Off
+OAuth 2.0 Device Authorization Grant Enabled     Off
+OIDC CIBA Grant Enabled      Off
+Authorization Enabled        Off
+Front Channel Logout         Off
+Root URL                     -
+* Valid Redirect URIs        https://satellite.build.example.com/users/extlogin/redirect_uri
+Base URL                     -
+Admin URL                    -
+Logo URL                     -
+Policy URL                   -
+Terms of service URL         -
+Web Origins                  https://satellite.build.example.com
+Backchannel Logout URL       -
+Backchannel Logout Session Required        On
+Backchannel Logout Revoke Offline Sessions        Off
+----
+
+More settings 
+
+* Fine Grain OpenID Connect Configuration  
+* OpenID Connect Compatibility Modes  
+* Advanced Settings  
+* Authentication Flow Overrides 
+
+=== Credentials 
+
+----
+Client Authenticator         Client Id and Secret
+Secret                       d6740610619f
+Registration access token    -
+-----
+
+=== Keys
+
+----
+Use JWKS URL                 Off
+Use JWKS                     Off
+----
+
+
+=== Roles 
+
+No client roles 
+
+
+HERE
+
+=== Client Scopes 
+
+=== Mappers 
+
+Create an audience mapper.
+----
+Name 
+Mapper Type Audience.
+Included Client Audience   (Satellite client)
+----
+
+Create a group mapper.
+----
+Name 
+Mapper Type  Group Membership.
+Token Claim Name  groups.
+Full group path   Off
+----
+
+
+=== Scope 
+=== Revocation
+=== Sessions 
+=== Offline Access 
+=== Clustering
+=== Installation 
+
+
+== configure keycloak settings in Satellite
+
+Values for some attributes are displayed on this page. 
+https://secret.source.example.com/auth/realms/IdM/.well-known/openid-configuration
+
+Administer > Settings > Authentication tab.
+
+----
+Authorize login delegation  Yes
+Authorize login delegation auth source user autocreate  External
+Login delegation logout URL  https://satellite.build.example.com/users/extlogout
+OIDC Algorithm  RS256
+OIDC Audience   (client ID)
+OIDC Issuer     https://secret.source.example.com/auth/realms/IdM
+OIDC JWKs URL   https://secret.source.example.com/auth/realms/IdM/protocol/openid-connect/certs
+----
+
+== configure Locations and Organizations in Satellite
+
+Administer > Authentication Sources > External > (vertical ellipsis) > Edit
+
+Add locations.
+
+Add organizations.
+
+Submit.
+
+
+== don't try this on a Satellite with IPA enabled
+
+External authentication via IPA and Keycloak are mutually exclusive.
+
+Oops!
+
+[source,shell]
+----
+[root@satellite.build.example.com CA]# satellite-installer --foreman-keycloak true \
+> --foreman-keycloak-app-name "foreman-openidc" \
+> --foreman-keycloak-realm "IdM"
+2024-02-16 18:49:45 [NOTICE] [root] Loading installer configuration. This will take some time.
+2024-02-16 18:49:49 [NOTICE] [root] Running installer with log based terminal output at level NOTICE.
+2024-02-16 18:49:49 [NOTICE] [root] Use -l to set the terminal output log level to ERROR, WARN, NOTICE, INFO, or DEBUG. See --full-help for definitions.
+Package versions are locked. Continuing with unlock.
+2024-02-16 18:49:58 [NOTICE] [configure] Starting system configuration.
+2024-02-16 18:50:03 [ERROR ] [configure] Evaluation Error: Error while evaluating a Function Call, satellite: External authentication via IPA and Keycloak are mutually exclusive. (file: /usr/share/foreman-installer/modules/foreman/manifests/init.pp, line: 325, column: 7) on node satellite.build.example.com
+2024-02-16 18:50:03 [NOTICE] [configure] System configuration has finished.
+
+  There were errors detected during install.
+  Please address the errors and re-run the installer to ensure the system is properly configured.
+  Failing to do so is likely to result in broken functionality.
+
+  The full log is at /var/log/foreman-installer/satellite.log
+Package versions are being locked.
+[root@satellite.build.example.com CA]# 
+[root@satellite.build.example.com CA]# systemctl restart httpd
+Job for httpd.service failed because the control process exited with error code.
+See "systemctl status httpd.service" and "journalctl -xe" for details.
+[root@satellite.build.example.com CA]# systemctl status httpd.service
+● httpd.service - The Apache HTTP Server
+   Loaded: loaded (/usr/lib/systemd/system/httpd.service; enabled; vendor preset: disabled)
+   Active: failed (Result: exit-code) since Fri 2024-02-16 18:53:06 GMT; 7s ago
+     Docs: man:httpd.service(8)
+  Process: 13069 ExecStart=/usr/sbin/httpd $OPTIONS -DFOREGROUND (code=exited, status=1/FAILURE)
+ Main PID: 13069 (code=exited, status=1/FAILURE)
+   Status: "Reading configuration..."
+
+Feb 16 18:53:06 satellite.build.example.com systemd[1]: Starting The Apache HTTP Server...
+Feb 16 18:53:06 satellite.build.example.com httpd[13069]: AH00526: Syntax error on line 1 of /etc/httpd/conf.d/foreman-openidc_oidc_keycloak_IdM.c>
+Feb 16 18:53:06 satellite.build.example.com httpd[13069]: Invalid command 'OIDCClientID', perhaps misspelled or defined by a module not included i>
+Feb 16 18:53:06 satellite.build.example.com systemd[1]: httpd.service: Main process exited, code=exited, status=1/FAILURE
+Feb 16 18:53:06 satellite.build.example.com systemd[1]: httpd.service: Failed with result 'exit-code'.
+Feb 16 18:53:06 satellite.build.example.com systemd[1]: Failed to start The Apache HTTP Server.
+...
+----
+
+Disable IPA.
+
+[source,shell]
+----
+satellite-installer    --reset-foreman-ipa-authentication --reset-foreman-ipa-authentication-api
+----
+
+
+
