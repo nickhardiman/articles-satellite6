@@ -30,14 +30,63 @@ https://access.redhat.com/documentation/en-us/red_hat_satellite/6.13/html-single
 
 == home lab 
 
-LDAP
+LDAP is also set up.
 https://satellite.build.example.com/auth_source_ldaps/new
 
 satellite.build.example.com-foreman-openidc
 
 
-== OIDC auth - integrate Satellite and Keycloak
+== summary of configuring OIDC auth 
 
+Integrate Satellite with Keycloak using OIDC protocol.
+
+!!!
+Better to have another identity provider too.
+How about a second keycloak.
+Satellite > keycloak broker > keycloak provider
+
+Keycloak provider
+
+Create a new realm. 
+Add local users. 
+Add a local group. 
+Add users to the group.
+
+Keycloak broker
+
+Create a new realm.
+Call the realm "my_realm".
+
+Satellite 
+
+Run helper command _keycloak-httpd-client-install_ to connect Satellite with keycloak. 
+This sets up the basics to simply authenticate client to idp (which in our case is keycloak) with mod_auth_openidc.
+
+Keycloak broker
+
+Use the web UI. 
+Create a new identity provider in realm "my_realm".
+
+Satellite 
+
+Add an external group.
+Use that new Keycloak provider group.
+Assign admin privilege to the external group.
+
+
+=== Test login
+
+Enter the URL https:/SATELLITE/users/extlogin.
+Page redirects to a keycloak broker login page for the realm.
+
+Click the OIDC button. 
+Page redirects to the keycloak provider login page. 
+
+Log in with account details.
+Redirects back to keycloak broker then Satellite.
+
+
+== integrate Satellite and Keycloak
 
 this looks like LDAP
 https://satellite.build.example.com/auth_source_ldaps/new
