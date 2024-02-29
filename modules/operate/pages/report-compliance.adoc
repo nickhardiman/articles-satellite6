@@ -54,4 +54,7 @@ It's a connected network. Should I forget Satellite and look at Insights and con
 if openscap scanner is installed on a machine, this command uploads to RH console
 ?
 
+[source,shell]
+----
 insights-client   --compliance
+----
