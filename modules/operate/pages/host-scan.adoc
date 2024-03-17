@@ -10,13 +10,13 @@ Nick Hardiman
 https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html-single/security_hardening/index
 
 [source,shell]
-....
+----
 [root@test.build.example.com ~]# source ~/lab-build-proxy.sh 
 [root@test.build.example.com ~]# dnf install wget bzip2 openscap-scanner
 curl -O https://www.redhat.com/security/data/oval/v2/RHEL8/rhel-8.oval.xml.bz2
 bzip2 --decompress  rhel-8.oval.xml.bz2
 ...
-
+----
 
 [source,shell]
 ....

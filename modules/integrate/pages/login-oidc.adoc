@@ -239,7 +239,7 @@ More settings
 Client Authenticator         Client Id and Secret
 Secret                       d6740610619f
 Registration access token    -
------
+----
 
 === Keys
 
@@ -365,6 +365,3 @@ Disable IPA.
 ----
 satellite-installer    --reset-foreman-ipa-authentication --reset-foreman-ipa-authentication-api
 ----
-
-
-
