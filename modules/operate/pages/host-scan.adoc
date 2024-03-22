@@ -1,4 +1,3 @@
-
 = scan a host
 Nick Hardiman 
 :source-highlighter: highlight.js
@@ -166,7 +165,7 @@ creates
 /etc/foreman_scap_client/config.yaml
 
 [source,shell]
-----js
+----
 [root@gene-debose.build.example.com ~]$ cat /etc/foreman_scap_client/config.yaml
 ...
 # policy (key is id as in Foreman)
