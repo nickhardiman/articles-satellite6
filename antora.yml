@@ -23,5 +23,7 @@ start_page: ROOT:index.adoc
 nav:
 - modules/set-up/nav.adoc 
 - modules/integrate/nav.adoc 
-- modules/manage-hosts/nav.adoc 
+- modules/provision-host/nav.adoc 
+- modules/patch-host/nav.adoc 
+- modules/upgrade-host/nav.adoc 
 

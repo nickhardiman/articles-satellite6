@@ -1,0 +1,50 @@
+= Leapp
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 02-02-2024
+
+
+== links
+
+rhel-ipu-notes.adoc
+
+instruqt
+https://www.redhat.com/en/interactive-labs/upgrade-with-leapp
+
+https://www.redhat.com/en/interactive-labs/perform-in-place-upgrade-with-leapp
+
+https://www.redhat.com/en/blog/leapp-upgrade-using-red-hat-satellite-6
+
+7-8
+https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html-single/upgrading_from_rhel_7_to_rhel_8/index
+
+8-9
+https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html/upgrading_from_rhel_8_to_rhel_9/index
+
+Perform an in-place upgrade with Leapp
+Use the Leapp application to upgrade from Red Hat Enterprise Linux 7 to Red Hat Enterprise Linux 8 without a reinstall.
+25 minutes
+
+Where the upstream collection lives now: 
+https://github.com/redhat-cop/infra.leapp
+
+https://leapp.readthedocs.io/en/latest/inplace-upgrade-workflow.html
+
+Russell's 
+Convert2RHEL Overview & RHEL Upgrades at Scale
+https://docs.google.com/presentation/d/1ASdttVA1HJ7_DpthwcVPlFfCmlZ4qVVZigoKdI6xkHU/edit#slide=id.g245e312f1de_0_8
+
+RHEL in-place upgrade - tech deck
+https://docs.google.com/presentation/d/1_Zogtn8yHXSFpRB-H_rW6UrMVq9xAOrelBRjXFizUwM/edit#slide=id.g245e312f1de_0_8
+
+This is what Bob H is presenting at Summit on migration: 
+Lightning talk: CentOS 7 to RHEL 9
+https://docs.google.com/presentation/d/1SmEcLUu0w3iX6OY0XcuiaOFhcPhgMOtcL7tTiXngc2Q/edit#slide=id.g2234bf4836e_0_220
+
+Where the upstream collection lives now: 
+https://github.com/redhat-cop/infra.leapp
+
+An actual CER for IPU that isn't Barclays: 
+https://gitlab.consulting.redhat.com/customer-success/consulting-engagement-reports/client-cers/2023/naps/sled/54736-nycppf-rhel-7-to-8
+
+

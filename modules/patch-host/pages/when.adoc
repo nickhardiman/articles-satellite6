@@ -1,0 +1,10 @@
+= when to patch a host
+Nick Hardiman 
+:source-highlighter: highlight.js
+:revdate: 25-09-2021
+
+x.y.z
+
+major.minor.patch
+
+Strategy is to patch in a test environment, make sure everything works and then move.
