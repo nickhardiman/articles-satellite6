@@ -3,4 +3,12 @@ Nick Hardiman
 :source-highlighter: highlight.js
 :revdate: 25-09-2021
 
-I'm in the process of experimenting.
+
+x.y.z
+
+major.minor.patch
+
+The definition of patching has grown over the years to include any update eg. minor update from 9.1 to 9.2. 
+
+EUS releases are the even-numbered ones.
+8.8, 8.10, 9.2, 9.4
